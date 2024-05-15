@@ -307,52 +307,17 @@ const displayElement = document.getElementById('stratagem-display');
 const logoElement = document.getElementById('stratagem-logo');
 const nameElement = document.getElementById('stratagem-name');
 const sequenceDisplay = document.getElementById('sequence-display');
-const stratagemSound = new Audio('sounds/activation.mp3');
 const errorDisplay = document.getElementById('error-display');
-const errorSound = new Audio('sounds/error.mp3');
-const buttonSounds = {
-    up: 'sounds/button-up.mp3',
-    down: 'sounds/button-down.mp3',
-    left: 'sounds/button-left.mp3',
-    right: 'sounds/button-right.mp3'
-};
 const overlay = document.getElementById('overlay');
 
-if ('serviceWorker' in navigator) {
-    window.addEventListener('load', () => {
-        navigator.serviceWorker.register('/service-worker.js').then(registration => {
-            console.log('ServiceWorker registration successful with scope: ', registration.scope);
-        }, err => {
-            console.log('ServiceWorker registration failed: ', err);
-        });
-    });
-}
-
-if (screen.orientation && screen.orientation.lock) {
-    screen.orientation.lock('landscape').catch(err => {
-        console.error('Screen orientation lock failed:', err);
-    });
-}
-
-document.addEventListener('touchstart', function(event) {
-    if (event.touches.length > 1) {
-        event.preventDefault();
-    }
-}, { passive: false });
-
-let lastTouchEnd = 0;
-document.addEventListener('touchend', function(event) {
-    const now = (new Date()).getTime();
-    if (now - lastTouchEnd <= 300) {
-        event.preventDefault();
-    }
-    lastTouchEnd = now;
-}, false);
-
-function playSound(src) {
-    const sound = new Audio(src);
-    sound.play();
-}
+const sounds = {
+    activation: new Audio('sounds/activation.mp3'),
+    error: new Audio('sounds/error.mp3'),
+    up: new Audio('sounds/button-up.mp3'),
+    down: new Audio('sounds/button-down.mp3'),
+    left: new Audio('sounds/button-left.mp3'),
+    right: new Audio('sounds/button-right.mp3')
+};
 
 document.querySelectorAll('.arrow').forEach(arrow => {
     arrow.addEventListener('click', () => {
@@ -362,7 +327,7 @@ document.querySelectorAll('.arrow').forEach(arrow => {
 
         requestAnimationFrame(() => {
             if (!isFinalInputInSequence()) {
-                playSound(buttonSounds[direction]);
+                playSound(sounds[direction]);
             }
             checkSequence();
         });
@@ -398,7 +363,7 @@ function displayStratagem(stratagem) {
     nameElement.textContent = stratagem.name;
     displayElement.classList.remove('hidden');
     overlay.classList.remove('hidden');
-    playSound('sounds/activation.mp3');
+    playSound(sounds.activation);
     setTimeout(() => {
         displayElement.classList.add('hidden');
         overlay.classList.add('hidden');
@@ -410,7 +375,7 @@ function displayStratagem(stratagem) {
 function displayError() {
     errorDisplay.classList.remove('hidden');
     overlay.classList.remove('hidden');
-    playSound('sounds/error.mp3');
+    playSound(sounds.error);
     setTimeout(() => {
         errorDisplay.classList.add('hidden');
         overlay.classList.add('hidden');
@@ -429,4 +394,9 @@ function isFinalInputInSequence() {
     }
 
     return inputSequence.length >= Math.max(...stratagems.map(s => s.sequence.length));
+}
+
+function playSound(sound) {
+    sound.currentTime = 0;
+    sound.play();
 }
