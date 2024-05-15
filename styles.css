@@ -1,0 +1,162 @@
+body {
+    margin: 0;
+    height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background-color: black;
+    overflow: hidden;
+    font-family: 'Arial', sans-serif;
+    color: white;
+    animation: flicker-init 1.5s linear forwards;
+    position: relative;
+}
+
+.arrow {
+    position: absolute;
+    width: 150px;
+    height: 150px;
+    cursor: pointer;
+    transition: transform 0.1s ease, color 0.1s ease;
+}
+
+.arrow img {
+    width: 100%;
+    height: 100%;
+}
+
+.arrow:active {
+    transform: scale(0.9);
+    opacity: 0.7;
+}
+
+#up-arrow {
+    top: 10%;
+    left: 50%;
+    transform: translateX(-50%);
+}
+
+#down-arrow {
+    bottom: 10%;
+    left: 50%;
+    transform: translateX(-50%);
+}
+
+#left-arrow {
+    left: 10%;
+    top: 50%;
+    transform: translateY(-50%);
+}
+
+#right-arrow {
+    right: 10%;
+    top: 50%;
+    transform: translateY(-50%);
+}
+
+#stratagem-display {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    text-align: center;
+    background-color: rgba(0, 0, 0);
+    padding: 40px;
+    border-radius: 10px;
+    box-shadow: 0 0 10px rgba(0, 255, 0, 0.5);
+    z-index: 10;
+}
+
+#stratagem-logo {
+    width: 200px;
+    height: 200px;
+}
+
+#error-display {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    font-size: 8rem;
+    color: red;
+    text-align: center;
+    background-color: rgba(0, 0, 0, 0.8);
+    padding: 40px;
+    border-radius: 10px;
+    box-shadow: 0 0 10px rgba(255, 0, 0, 0.5);
+    z-index: 10;
+}
+
+#sequence-display {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    display: flex;
+    gap: 10px;
+    z-index: 5;
+}
+
+#sequence-display img {
+    width: 50px;
+    height: 50px;
+}
+
+#overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.8);
+    backdrop-filter: blur(5px);
+    z-index: 5;
+}
+
+.hidden {
+    display: none;
+}
+
+@keyframes flicker {
+    0%, 19%, 21%, 23%, 25%, 54%, 56%, 100% {
+        opacity: 1;
+    }
+    20%, 24%, 55% {
+        opacity: 0;
+    }
+}
+
+@keyframes flicker-init {
+    0%, 19%, 21%, 23%, 25%, 54%, 56%, 100% {
+        opacity: 1;
+    }
+    20%, 24%, 55% {
+        opacity: 0;
+    }
+}
+
+body::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(rgba(255, 255, 255, 0.05) 50%, transparent 50%);
+    background-size: 100% 8px;
+    pointer-events: none;
+    z-index: 2;
+    mix-blend-mode: overlay;
+}
+
+body::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.1);
+    pointer-events: none;
+    z-index: 2;
+}
