@@ -318,17 +318,54 @@ const buttonSounds = {
 };
 const overlay = document.getElementById('overlay');
 
+if ('serviceWorker' in navigator) {
+    window.addEventListener('load', () => {
+        navigator.serviceWorker.register('/service-worker.js').then(registration => {
+            console.log('ServiceWorker registration successful with scope: ', registration.scope);
+        }, err => {
+            console.log('ServiceWorker registration failed: ', err);
+        });
+    });
+}
+
+if (screen.orientation && screen.orientation.lock) {
+    screen.orientation.lock('landscape').catch(err => {
+        console.error('Screen orientation lock failed:', err);
+    });
+}
+
+document.addEventListener('touchstart', function(event) {
+    if (event.touches.length > 1) {
+        event.preventDefault();
+    }
+}, { passive: false });
+
+let lastTouchEnd = 0;
+document.addEventListener('touchend', function(event) {
+    const now = (new Date()).getTime();
+    if (now - lastTouchEnd <= 300) {
+        event.preventDefault();
+    }
+    lastTouchEnd = now;
+}, false);
+
+function playSound(src) {
+    const sound = new Audio(src);
+    sound.play();
+}
+
 document.querySelectorAll('.arrow').forEach(arrow => {
     arrow.addEventListener('click', () => {
         const direction = arrow.id.split('-')[0];
         inputSequence.push(direction);
         updateSequenceDisplay();
 
-        if (!isFinalInputInSequence()) {
-            playSound(buttonSounds[direction]);
-        }
-
-        checkSequence();
+        requestAnimationFrame(() => {
+            if (!isFinalInputInSequence()) {
+                playSound(buttonSounds[direction]);
+            }
+            checkSequence();
+        });
     });
 });
 
@@ -392,9 +429,4 @@ function isFinalInputInSequence() {
     }
 
     return inputSequence.length >= Math.max(...stratagems.map(s => s.sequence.length));
-}
-
-function playSound(src) {
-    const sound = new Audio(src);
-    sound.play();
 }

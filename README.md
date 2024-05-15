@@ -21,7 +21,7 @@ I made this for using on a phone, integrated in Galactic Armory's Hellpad 3d pro
 ## Local Use
 1. Clone the repository:
     ```sh
-    git clone https://github.com/your-username/helldivers-hellpad.git
+    git clone https://github.com/your-username/htmhellpad.git
     ```
 2. Open `index.html` in your browser.
 
