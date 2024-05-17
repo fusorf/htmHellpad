@@ -31,4 +31,10 @@
     <script src="scripts.js"></script>
 </body>
 
+<script>
+    if (typeof navigator.serviceWorker !== 'undefined') {
+      navigator.serviceWorker.register('service-worker.js')
+    }
+</script>
+
 </html>
