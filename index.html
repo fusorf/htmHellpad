@@ -8,6 +8,12 @@
     <link rel="stylesheet" href="styles.css">
     <link rel="manifest" href="manifest.json">
     <meta name="theme-color" content="#000000">
+    <link rel="apple-touch-icon" sizes="180x180" href="images/apple-touch-icon.png">
+    <link rel="icon" type="image/png" sizes="32x32" href="images/favicon-32x32.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="images/favicon-16x16.png">
+    <link rel="mask-icon" href="images/safari-pinned-tab.svg" color="#5bbad5">
+    <meta name="msapplication-TileColor" content="#da532c">
+    <meta name="theme-color" content="#ffffff">
 </head>
 
 <body>
@@ -22,22 +28,7 @@
     <div class="arrow" id="down-arrow"><img src="images/down-arrow.svg" alt="Down"></div>
     <div class="arrow" id="left-arrow"><img src="images/left-arrow.svg" alt="Left"></div>
     <div class="arrow" id="right-arrow"><img src="images/right-arrow.svg" alt="Right"></div>
-    <audio id="stratagem-sound"></audio>
-    <audio id="error-sound" src="sounds/error.mp3"></audio>
-    <audio id="button-up-sound" src="sounds/button-up.mp3"></audio>
-    <audio id="button-down-sound" src="sounds/button-down.mp3"></audio>
-    <audio id="button-left-sound" src="sounds/button-left.mp3"></audio>
-    <audio id="button-right-sound" src="sounds/button-right.mp3"></audio>
     <script src="scripts.js"></script>
 </body>
-<script>
-    document.addEventListener('DOMContentLoaded', () => {
-        if (screen.orientation && screen.orientation.lock) {
-            screen.orientation.lock('landscape').catch(err => {
-                console.error('Screen orientation lock failed:', err);
-            });
-        }
-    });
-</script>
 
 </html>
