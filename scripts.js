@@ -310,68 +310,37 @@ const sequenceDisplay = document.getElementById('sequence-display');
 const errorDisplay = document.getElementById('error-display');
 const overlay = document.getElementById('overlay');
 
-const sounds = {
-    activation: new Audio('sounds/activation.mp3'),
-    error: new Audio('sounds/error.mp3'),
-    up: new Audio('sounds/button-up.mp3'),
-    down: new Audio('sounds/button-down.mp3'),
-    left: new Audio('sounds/button-left.mp3'),
-    right: new Audio('sounds/button-right.mp3')
-};
+lowLag.init({
+    'urlPrefix': 'sounds/',
+    'debug': 'console'
+});
 
-function initializeSounds() {
-    return Promise.all(Object.values(sounds).map(sound => {
-        return new Promise((resolve, reject) => {
-            sound.addEventListener('canplaythrough', resolve, { once: true });
-            sound.addEventListener('error', reject, { once: true });
-            sound.preload = 'auto';
-            sound.load();
-        });
-    }));
-}
-
-let soundsInitialized = false;
-
-function handleInput(direction) {
-    inputSequence.push(direction);
-    updateSequenceDisplay();
-
-    requestAnimationFrame(() => {
-        if (!isFinalInputInSequence()) {
-            playSound(sounds[direction]);
-        }
-        checkSequence();
-    });
-}
+lowLag.load(['activation.mp3', 'activation.ogg'], 'activation');
+lowLag.load(['error.mp3', 'error.ogg'], 'error');
+lowLag.load(['button-up.mp3', 'button-up.ogg'], 'up');
+lowLag.load(['button-down.mp3', 'button-down.ogg'], 'down');
+lowLag.load(['button-left.mp3', 'button-left.ogg'], 'left');
+lowLag.load(['button-right.mp3', 'button-right.ogg'], 'right');
 
 document.querySelectorAll('.arrow').forEach(arrow => {
-    const handleEvent = async function(event) {
+    const handleEvent = function(event) {
         event.preventDefault();
-
-        if (!soundsInitialized) {
-            try {
-                await initializeSounds();
-                soundsInitialized = true;
-            } catch (error) {
-                console.error('Failed to load sounds:', error);
-                return;
-            }
-        }
 
         const direction = arrow.id.split('-')[0];
         inputSequence.push(direction);
         updateSequenceDisplay();
 
-        if (!isFinalInputInSequence()) {
-            playSound(sounds[direction]);
-        }
-        checkSequence();
+        requestAnimationFrame(() => {
+            if (!isFinalInputInSequence()) {
+                lowLag.play(direction);
+            }
+            checkSequence();
+        });
     };
 
     arrow.addEventListener('touchstart', handleEvent);
     arrow.addEventListener('click', handleEvent);
 });
-
 
 function updateSequenceDisplay() {
     const fragment = document.createDocumentFragment();
@@ -404,7 +373,7 @@ function displayStratagem(stratagem) {
     nameElement.textContent = stratagem.name;
     displayElement.classList.remove('hidden');
     overlay.classList.remove('hidden');
-    playSound(sounds.activation);
+    lowLag.play('activation');
     setTimeout(() => {
         displayElement.classList.add('hidden');
         overlay.classList.add('hidden');
@@ -416,7 +385,7 @@ function displayStratagem(stratagem) {
 function displayError() {
     errorDisplay.classList.remove('hidden');
     overlay.classList.remove('hidden');
-    playSound(sounds.error);
+    lowLag.play('error');
     setTimeout(() => {
         errorDisplay.classList.add('hidden');
         overlay.classList.add('hidden');
@@ -435,11 +404,4 @@ function isFinalInputInSequence() {
     }
 
     return inputSequence.length >= Math.max(...stratagems.map(s => s.sequence.length));
-}
-
-function playSound(sound) {
-    sound.currentTime = 0;
-    sound.play().catch(error => {
-        console.error('Audio play failed:', error);
-    });
 }
