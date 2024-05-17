@@ -320,13 +320,14 @@ const sounds = {
 };
 
 function initializeSounds() {
-    const promises = Object.keys(sounds).map(key => {
+    return Promise.all(Object.values(sounds).map(sound => {
         return new Promise((resolve, reject) => {
-            sounds[key].addEventListener('canplaythrough', resolve, { once: true });
-            sounds[key].addEventListener('error', reject, { once: true });
+            sound.addEventListener('canplaythrough', resolve, { once: true });
+            sound.addEventListener('error', reject, { once: true });
+            sound.preload = 'auto';
+            sound.load();
         });
-    });
-    return Promise.all(promises);
+    }));
 }
 
 let soundsInitialized = false;
