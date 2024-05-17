@@ -331,18 +331,6 @@ function initializeSounds() {
 
 let soundsInitialized = false;
 
-function debounce(func, wait) {
-    let timeout;
-    return function(...args) {
-        const later = () => {
-            clearTimeout(timeout);
-            func.apply(this, args);
-        };
-        clearTimeout(timeout);
-        timeout = setTimeout(later, wait);
-    };
-}
-
 function handleInput(direction) {
     inputSequence.push(direction);
     updateSequenceDisplay();
@@ -355,8 +343,10 @@ function handleInput(direction) {
     });
 }
 
+let soundsInitialized = false;
+
 document.querySelectorAll('.arrow').forEach(arrow => {
-    const handleEvent = debounce(async function(event) {
+    const handleEvent = async function(event) {
         event.preventDefault();
 
         if (!soundsInitialized) {
@@ -370,12 +360,19 @@ document.querySelectorAll('.arrow').forEach(arrow => {
         }
 
         const direction = arrow.id.split('-')[0];
-        handleInput(direction);
-    }, 50);
+        inputSequence.push(direction);
+        updateSequenceDisplay();
+
+        if (!isFinalInputInSequence()) {
+            playSound(sounds[direction]);
+        }
+        checkSequence();
+    };
 
     arrow.addEventListener('touchstart', handleEvent);
     arrow.addEventListener('click', handleEvent);
 });
+
 
 function updateSequenceDisplay() {
     const fragment = document.createDocumentFragment();
