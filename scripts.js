@@ -343,8 +343,6 @@ function handleInput(direction) {
     });
 }
 
-let soundsInitialized = false;
-
 document.querySelectorAll('.arrow').forEach(arrow => {
     const handleEvent = async function(event) {
         event.preventDefault();
