@@ -320,47 +320,73 @@ const sounds = {
 };
 
 function initializeSounds() {
-    Object.keys(sounds).forEach(key => {
-        sounds[key].preload = 'auto';
-        sounds[key].load();
+    const promises = Object.keys(sounds).map(key => {
+        return new Promise((resolve, reject) => {
+            sounds[key].addEventListener('canplaythrough', resolve, { once: true });
+            sounds[key].addEventListener('error', reject, { once: true });
+        });
     });
+    return Promise.all(promises);
 }
 
 let soundsInitialized = false;
 
+function debounce(func, wait) {
+    let timeout;
+    return function(...args) {
+        const later = () => {
+            clearTimeout(timeout);
+            func.apply(this, args);
+        };
+        clearTimeout(timeout);
+        timeout = setTimeout(later, wait);
+    };
+}
+
+function handleInput(direction) {
+    inputSequence.push(direction);
+    updateSequenceDisplay();
+
+    requestAnimationFrame(() => {
+        if (!isFinalInputInSequence()) {
+            playSound(sounds[direction]);
+        }
+        checkSequence();
+    });
+}
+
 document.querySelectorAll('.arrow').forEach(arrow => {
-    const handleEvent = function(event) {
+    const handleEvent = debounce(async function(event) {
         event.preventDefault();
 
         if (!soundsInitialized) {
-            initializeSounds();
-            soundsInitialized = true;
+            try {
+                await initializeSounds();
+                soundsInitialized = true;
+            } catch (error) {
+                console.error('Failed to load sounds:', error);
+                return;
+            }
         }
 
         const direction = arrow.id.split('-')[0];
-        inputSequence.push(direction);
-        updateSequenceDisplay();
-
-        requestAnimationFrame(() => {
-            if (!isFinalInputInSequence()) {
-                playSound(sounds[direction]);
-            }
-            checkSequence();
-        });
-    };
+        handleInput(direction);
+    }, 50);
 
     arrow.addEventListener('touchstart', handleEvent);
     arrow.addEventListener('click', handleEvent);
 });
 
 function updateSequenceDisplay() {
-    sequenceDisplay.innerHTML = '';
+    const fragment = document.createDocumentFragment();
     inputSequence.forEach(direction => {
         const img = document.createElement('img');
         img.src = `images/${direction}-arrow.svg`;
         img.alt = direction.charAt(0).toUpperCase() + direction.slice(1);
-        sequenceDisplay.appendChild(img);
+        fragment.appendChild(img);
     });
+    sequenceDisplay.innerHTML = '';
+    sequenceDisplay.appendChild(fragment);
 }
 
 function checkSequence() {
