@@ -301,6 +301,16 @@ const stratagems = [
     }
 ];
 
+if ('serviceWorker' in navigator) {
+    window.addEventListener('load', () => {
+        navigator.serviceWorker.register('/service-worker.js').then(registration => {
+            console.log('ServiceWorker registration successful with scope: ', registration.scope);
+        }, err => {
+            console.log('ServiceWorker registration failed: ', err);
+        });
+    });
+}
+
 let inputSequence = [];
 
 const displayElement = document.getElementById('stratagem-display');
@@ -319,8 +329,24 @@ const sounds = {
     right: new Audio('sounds/button-right.mp3')
 };
 
+function initializeSounds() {
+    Object.keys(sounds).forEach(key => {
+        sounds[key].preload = 'auto';
+        sounds[key].load();
+    });
+}
+
+let soundsInitialized = false;
+
 document.querySelectorAll('.arrow').forEach(arrow => {
-    arrow.addEventListener('click', () => {
+    const handleEvent = function(event) {
+        event.preventDefault();
+
+        if (!soundsInitialized) {
+            initializeSounds();
+            soundsInitialized = true;
+        }
+
         const direction = arrow.id.split('-')[0];
         inputSequence.push(direction);
         updateSequenceDisplay();
@@ -331,7 +357,10 @@ document.querySelectorAll('.arrow').forEach(arrow => {
             }
             checkSequence();
         });
-    });
+    };
+
+    arrow.addEventListener('touchstart', handleEvent);
+    arrow.addEventListener('click', handleEvent);
 });
 
 function updateSequenceDisplay() {
@@ -398,5 +427,7 @@ function isFinalInputInSequence() {
 
 function playSound(sound) {
     sound.currentTime = 0;
-    sound.play();
+    sound.play().catch(error => {
+        console.error('Audio play failed:', error);
+    });
 }
