@@ -1,79 +1,506 @@
+/* === HTMHELLPAD — Helldivers UI === */
+
+@import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Share+Tech+Mono&display=swap');
+
+:root {
+    --hd-black: #0a0a0a;
+    --hd-dark: #141414;
+    --hd-gray: #4a4a4a;
+    --hd-light-gray: #b0b0b0;
+    --hd-white: #ffffff;
+    --hd-yellow: #ffd500;
+    --hd-yellow-dim: #b89b00;
+    --hd-blue-bg: #0e3460;
+    --hd-blue-light: #c0e0ff;
+    --hd-blue-line: #e0f0ff;
+    --hd-blue-glow: rgba(180, 220, 255, 0.35);
+    --hd-red: #ff4444;
+    --hd-green: #44ff77;
+    --hd-font: 'Orbitron', 'Arial', sans-serif;
+    --hd-font-mono: 'Share Tech Mono', 'Courier New', monospace;
+}
+
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+
 body {
     margin: 0;
-    background-color: black;
+    background-color: var(--hd-black);
     overflow: hidden;
-    font-family: 'Arial', sans-serif;
-    color: white;
+    font-family: var(--hd-font);
+    color: var(--hd-white);
+    -webkit-user-select: none;
+    user-select: none;
 }
+
+.hidden {
+    display: none !important;
+}
+
+/* ============================================
+   BOOT SCREEN
+   ============================================ */
+
+#boot-screen {
+    width: 100vw;
+    height: 100vh;
+    background: #000000;
+    padding: 16px;
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-end;
+}
+
+#boot-log {
+    font-family: var(--hd-font-mono);
+    font-size: 14px;
+    line-height: 1.5;
+    color: var(--hd-white);
+    white-space: pre;
+    opacity: 0.9;
+}
+
+#boot-log .boot-ok {
+    color: var(--hd-green);
+}
+
+#boot-log .boot-warn {
+    color: var(--hd-yellow);
+}
+
+#boot-log .boot-fail {
+    color: var(--hd-red);
+}
+
+/* ============================================
+   WELCOME SCREEN
+   ============================================ */
+
+#welcome-screen {
+    width: 100vw;
+    height: 100vh;
+    background:
+        radial-gradient(ellipse at center, var(--hd-blue-bg) 0%, #061520 70%, #020a10 100%);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: space-between;
+    position: relative;
+    overflow: hidden;
+}
+
+/* Blueprint grid */
+#welcome-screen::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background-image:
+        linear-gradient(rgba(168, 212, 240, 0.04) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(168, 212, 240, 0.04) 1px, transparent 1px);
+    background-size: 40px 40px;
+    pointer-events: none;
+}
+
+/* Scan line sweep */
+.welcome-scanline {
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(
+        to bottom,
+        transparent 0%,
+        rgba(168, 212, 240, 0.03) 50%,
+        transparent 100%
+    );
+    background-size: 100% 4px;
+    background-repeat: repeat;
+    pointer-events: none;
+    z-index: 1;
+}
+
+.welcome-line {
+    width: 100%;
+    height: 1px;
+    background: linear-gradient(
+        90deg,
+        transparent 0%,
+        var(--hd-blue-line) 20%,
+        var(--hd-blue-line) 80%,
+        transparent 100%
+    );
+    flex-shrink: 0;
+    box-shadow: 0 0 12px var(--hd-blue-glow), 0 0 30px var(--hd-blue-glow);
+}
+
+.welcome-line-top {
+    margin-top: 24px;
+}
+
+.welcome-line-bottom {
+    margin-bottom: 24px;
+}
+
+.welcome-content {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 24px;
+    flex: 1;
+    z-index: 2;
+}
+
+.welcome-logo {
+    width: min(70%, 500px);
+    height: auto;
+    color: var(--hd-blue-line);
+    filter: drop-shadow(0 0 8px var(--hd-blue-glow)) drop-shadow(0 0 20px var(--hd-blue-glow));
+    animation: welcome-pulse 2s ease-in-out infinite;
+}
+
+@keyframes welcome-pulse {
+    0%, 100% { filter: drop-shadow(0 0 8px var(--hd-blue-glow)) drop-shadow(0 0 20px var(--hd-blue-glow)); }
+    50% { filter: drop-shadow(0 0 12px var(--hd-blue-glow)) drop-shadow(0 0 35px rgba(168, 212, 240, 0.5)); }
+}
+
+.welcome-text {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 2px;
+}
+
+.welcome-title {
+    font-family: var(--hd-font);
+    font-size: clamp(24px, 5.5vw, 42px);
+    font-weight: 700;
+    letter-spacing: 0.4em;
+    color: var(--hd-blue-line);
+    text-shadow: 0 0 10px var(--hd-blue-glow);
+}
+
+.welcome-subtitle {
+    font-family: var(--hd-font);
+    font-size: clamp(16px, 3.5vw, 28px);
+    font-weight: 400;
+    letter-spacing: 0.6em;
+    color: var(--hd-blue-light);
+    opacity: 0.7;
+}
+
+.welcome-meta {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 4px;
+    font-size: 13px;
+    letter-spacing: 0.3em;
+    color: var(--hd-blue-light);
+    opacity: 0.4;
+    text-transform: uppercase;
+}
+
+.welcome-tap {
+    font-size: 14px;
+    letter-spacing: 0.4em;
+    color: var(--hd-blue-light);
+    opacity: 0;
+    animation: tap-blink 1.5s ease-in-out 0.5s infinite;
+}
+
+@keyframes tap-blink {
+    0%, 100% { opacity: 0; }
+    50% { opacity: 0.5; }
+}
+
+/* Welcome fade-in */
+#welcome-screen .welcome-content {
+    animation: welcome-fadein 0.3s ease-out;
+}
+
+@keyframes welcome-fadein {
+    from { opacity: 0; transform: scale(0.98); }
+    to { opacity: 1; transform: scale(1); }
+}
+
+/* ============================================
+   MAIN APP
+   ============================================ */
 
 #app {
     width: 100vw;
     height: 100vh;
     position: relative;
     display: flex;
-    justify-content: center;
+    flex-direction: column;
+    justify-content: space-between;
     align-items: center;
-    animation: flicker 1.5s linear forwards;
+    background:
+        radial-gradient(ellipse at center, #123d6e 0%, #0a2540 50%, #041520 100%);
+    animation: app-reveal 0.6s ease-out forwards;
 }
 
-/* --- Arrow buttons --- */
+@keyframes app-reveal {
+    0%   { opacity: 0; transform: scale(1.02); filter: brightness(1.5) blur(4px); }
+    40%  { opacity: 1; filter: brightness(1.2) blur(1px); }
+    100% { opacity: 1; transform: scale(1); filter: brightness(1) blur(0px); }
+}
+
+/* --- App lines (top/bottom) --- */
+
+.app-line {
+    width: 100%;
+    height: 1px;
+    background: linear-gradient(
+        90deg,
+        transparent 0%,
+        var(--hd-blue-line) 20%,
+        var(--hd-blue-line) 80%,
+        transparent 100%
+    );
+    flex-shrink: 0;
+    z-index: 10;
+    box-shadow: 0 0 12px var(--hd-blue-glow), 0 0 30px var(--hd-blue-glow);
+}
+
+.app-line-top {
+    margin-top: 24px;
+}
+
+.app-line-bottom {
+    margin-bottom: 24px;
+}
+
+/* --- App header (logo + sequence) --- */
+
+#app-header {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 12px;
+    z-index: 10;
+    flex-shrink: 0;
+    padding: 8px 0;
+}
+
+.app-logo {
+    height: clamp(20px, 6vh, 40px);
+    width: auto;
+    opacity: 0.7;
+    filter: drop-shadow(0 0 6px var(--hd-blue-glow));
+    position: relative;
+    z-index: 11;
+}
+
+/* Blueprint grid on app */
+#app > .blueprint-grid {
+    position: absolute;
+    inset: 0;
+    background-image:
+        linear-gradient(rgba(180, 220, 255, 0.07) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(180, 220, 255, 0.07) 1px, transparent 1px);
+    background-size: 40px 40px;
+    pointer-events: none;
+    z-index: 0;
+}
+
+/* CRT scanlines */
+#app::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: repeating-linear-gradient(
+        to bottom,
+        transparent 0px,
+        transparent 2px,
+        rgba(0, 0, 0, 0.15) 2px,
+        rgba(0, 0, 0, 0.15) 4px
+    );
+    pointer-events: none;
+    z-index: 100;
+}
+
+/* Vignette */
+#app::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: radial-gradient(ellipse at center, transparent 50%, rgba(2, 10, 16, 0.5) 100%);
+    pointer-events: none;
+    z-index: 100;
+}
+
+/* ============================================
+   D-PAD
+   ============================================ */
+
+#dpad {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 6px;
+    z-index: 10;
+    flex-shrink: 0;
+    padding: 4px 0;
+}
+
+.dpad-row {
+    display: flex;
+    gap: 6px;
+}
+
+.dpad-row-top {
+    justify-content: center;
+}
+
+.dpad-row-bottom {
+    justify-content: center;
+}
 
 .arrow {
-    position: absolute;
-    width: 10em;
-    height: 10em;
     display: flex;
-    cursor: pointer;
-    transition: transform 0.1s ease, opacity 0.1s ease;
     align-items: center;
     justify-content: center;
-    background: none;
-    border: none;
+    width: min(22vh, 100px);
+    height: min(22vh, 100px);
+    cursor: pointer;
+    background: linear-gradient(145deg, rgba(25, 55, 85, 0.7), rgba(10, 25, 45, 0.85));
+    border: 2px solid rgba(200, 230, 255, 0.25);
+    border-radius: 8px;
     padding: 0;
     -webkit-tap-highlight-color: transparent;
+    transition: all 0.08s ease;
+    position: relative;
+    overflow: hidden;
 }
 
-.arrow:active {
-    transform: scale(0.9);
-    opacity: 0.7;
-}
-
-.arrow:focus-visible {
-    outline: 3px solid #ffe600;
-    outline-offset: 4px;
-    border-radius: 8px;
-}
-
-.arrow img {
-    height: 6em;
+/* Inner glow on idle */
+.arrow::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    border-radius: 6px;
+    background: radial-gradient(ellipse at center, rgba(168, 212, 240, 0.04) 0%, transparent 70%);
     pointer-events: none;
 }
 
-#up-arrow {
-    top: 10%;
-    left: 50%;
-    transform: translateX(-50%);
+/* Corner accents */
+.arrow::after {
+    content: '';
+    position: absolute;
+    inset: 4px;
+    border: 1px solid rgba(200, 230, 255, 0.1);
+    border-radius: 4px;
+    pointer-events: none;
 }
 
-#down-arrow {
-    bottom: 10%;
-    left: 50%;
-    transform: translateX(-50%);
+.arrow svg {
+    width: 45%;
+    height: 45%;
+    fill: var(--hd-white);
+    filter: drop-shadow(0 0 4px var(--hd-blue-glow));
+    transition: all 0.08s ease;
+    pointer-events: none;
 }
 
-#left-arrow {
-    left: 10%;
-    top: 50%;
-    transform: translateY(-50%);
+.arrow:active {
+    background: linear-gradient(145deg, rgba(30, 60, 90, 0.8), rgba(15, 35, 55, 0.9));
+    border-color: var(--hd-blue-light);
+    box-shadow:
+        0 0 15px var(--hd-blue-glow),
+        inset 0 0 15px rgba(168, 212, 240, 0.1);
+    transform: scale(0.95);
 }
 
-#right-arrow {
-    right: 10%;
-    top: 50%;
-    transform: translateY(-50%);
+.arrow:active svg {
+    fill: #ffffff;
+    filter: drop-shadow(0 0 8px rgba(168, 212, 240, 0.8));
 }
 
-/* --- Stratagem display --- */
+.arrow:focus-visible {
+    outline: 2px solid var(--hd-blue-light);
+    outline-offset: 2px;
+}
+
+/* ============================================
+   SEQUENCE DISPLAY
+   ============================================ */
+
+#sequence-display {
+    display: flex;
+    flex-wrap: nowrap;
+    justify-content: center;
+    align-items: center;
+    gap: 10px;
+    z-index: 10;
+    width: 100%;
+    height: 56px;
+    padding: 0 20px;
+    background:
+        linear-gradient(90deg,
+            transparent 0%,
+            rgba(6, 21, 32, 0.5) 15%,
+            rgba(10, 35, 60, 0.5) 50%,
+            rgba(6, 21, 32, 0.5) 85%,
+            transparent 100%
+        );
+    border: none;
+    border-top: 1px solid rgba(200, 230, 255, 0.08);
+    border-bottom: 1px solid rgba(200, 230, 255, 0.08);
+    position: relative;
+}
+
+/* Subtle side fade accents */
+#sequence-display::before,
+#sequence-display::after {
+    content: '';
+    position: absolute;
+    top: 25%;
+    bottom: 25%;
+    width: 1px;
+    background: linear-gradient(to bottom, transparent, rgba(200, 230, 255, 0.15), transparent);
+    pointer-events: none;
+}
+
+#sequence-display::before { left: 10%; }
+#sequence-display::after { right: 10%; }
+
+#sequence-display:empty {
+    background:
+        linear-gradient(90deg,
+            transparent 0%,
+            rgba(6, 21, 32, 0.25) 15%,
+            rgba(10, 35, 60, 0.25) 50%,
+            rgba(6, 21, 32, 0.25) 85%,
+            transparent 100%
+        );
+    border-top-color: rgba(200, 230, 255, 0.04);
+    border-bottom-color: rgba(200, 230, 255, 0.04);
+}
+
+#sequence-display:empty::before,
+#sequence-display:empty::after {
+    opacity: 0.3;
+}
+
+#sequence-display img {
+    width: 40px;
+    height: 40px;
+    filter: brightness(0) invert(1) opacity(0.9);
+    animation: arrow-pop 0.15s ease-out;
+}
+
+@keyframes arrow-pop {
+    from { transform: scale(0.5); opacity: 0; }
+    to { transform: scale(1); opacity: 1; }
+}
+
+/* ============================================
+   STRATAGEM DISPLAY
+   ============================================ */
 
 #stratagem-display {
     position: absolute;
@@ -81,110 +508,89 @@ body {
     left: 50%;
     transform: translate(-50%, -50%);
     text-align: center;
-    background-color: rgb(0, 0, 0);
-    padding: 40px;
-    border-radius: 10px;
-    box-shadow: 0 0 10px rgba(0, 255, 0, 0.5);
-    z-index: 10;
+    background: rgba(6, 21, 32, 0.95);
+    padding: 40px 60px;
+    border: 2px solid var(--hd-blue-light);
+    border-radius: 6px;
+    box-shadow:
+        0 0 30px var(--hd-blue-glow),
+        0 0 60px rgba(168, 212, 240, 0.15),
+        inset 0 0 30px rgba(168, 212, 240, 0.05);
+    z-index: 50;
+    animation: strat-appear 0.2s ease-out;
+}
+
+@keyframes strat-appear {
+    from { opacity: 0; transform: translate(-50%, -50%) scale(0.9); }
+    to { opacity: 1; transform: translate(-50%, -50%) scale(1); }
 }
 
 #stratagem-logo {
-    width: 150px;
-    height: 150px;
+    width: 160px;
+    height: 160px;
+    filter: brightness(0) invert(1);
 }
 
-/* --- Error display --- */
+#stratagem-name {
+    font-family: var(--hd-font);
+    font-size: clamp(20px, 4vw, 32px);
+    font-weight: 700;
+    color: var(--hd-blue-line);
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    margin-top: 16px;
+    text-shadow: 0 0 10px var(--hd-blue-glow);
+}
+
+#stratagem-display .strat-tap-hint {
+    font-size: 12px;
+    letter-spacing: 0.3em;
+    color: var(--hd-blue-light);
+    opacity: 0.4;
+    margin-top: 20px;
+}
+
+/* ============================================
+   ERROR DISPLAY
+   ============================================ */
 
 #error-display {
     position: absolute;
     top: 50%;
     left: 50%;
     transform: translate(-50%, -50%);
-    font-size: 8rem;
-    color: red;
+    font-family: var(--hd-font);
+    font-size: clamp(3rem, 12vw, 7rem);
+    font-weight: 900;
+    color: var(--hd-red);
     text-align: center;
-    background-color: rgba(0, 0, 0, 0.8);
-    padding: 40px;
-    border-radius: 10px;
-    box-shadow: 0 0 10px rgba(255, 0, 0, 0.5);
-    z-index: 10;
+    letter-spacing: 0.2em;
+    text-shadow: 0 0 20px rgba(255, 50, 50, 0.5);
+    z-index: 50;
+    animation: error-flash 0.15s ease-in-out 2;
 }
 
-/* --- Sequence display --- */
-
-#sequence-display {
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
-    display: flex;
-    flex-wrap: wrap;
-    justify-content: center;
-    gap: 4px;
-    z-index: 5;
+@keyframes error-flash {
+    0%, 100% { opacity: 1; }
+    50% { opacity: 0.3; }
 }
 
-#sequence-display img {
-    width: 50px;
-    height: 50px;
-}
-
-/* --- Overlay --- */
+/* ============================================
+   OVERLAY
+   ============================================ */
 
 #overlay {
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    background: rgba(0, 0, 0, 0.8);
-    -webkit-backdrop-filter: blur(5px);
-    backdrop-filter: blur(5px);
-    z-index: 5;
-}
-
-.hidden {
-    display: none;
-}
-
-/* --- CRT effect --- */
-
-@keyframes flicker {
-    0%, 19%, 21%, 23%, 25%, 54%, 56%, 100% {
-        opacity: 1;
-    }
-    20%, 24%, 55% {
-        opacity: 0;
-    }
-}
-
-#app::before {
-    content: '';
     position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    background: linear-gradient(rgba(255, 255, 255, 0.05) 50%, transparent 50%);
-    background-size: 100% 8px;
-    pointer-events: none;
-    z-index: 2;
-    mix-blend-mode: overlay;
+    inset: 0;
+    background: rgba(0, 0, 0, 0.85);
+    -webkit-backdrop-filter: blur(4px);
+    backdrop-filter: blur(4px);
+    z-index: 40;
 }
 
-#app::after {
-    content: '';
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    background: rgba(0, 0, 0, 0.1);
-    pointer-events: none;
-    z-index: 2;
-}
-
-/* --- Portrait rotation (rotate html — no parent can clip it) --- */
+/* ============================================
+   PORTRAIT ROTATION
+   ============================================ */
 
 @media (orientation: portrait) {
     html {
@@ -201,27 +607,40 @@ body {
         height: 100%;
     }
 
+    #boot-screen,
+    #welcome-screen,
     #app {
         width: 100%;
         height: 100%;
     }
 }
 
-/* --- Responsive (very small screens) --- */
+/* ============================================
+   RESPONSIVE (small screens)
+   ============================================ */
 
 @media (max-height: 450px) {
     .arrow {
-        width: 7em;
-        height: 7em;
+        width: min(18vh, 80px);
+        height: min(18vh, 80px);
     }
 
-    .arrow img {
-        height: 4em;
+    .app-logo {
+        height: clamp(16px, 4vh, 28px);
+    }
+
+    #app-header {
+        gap: 6px;
+        padding: 4px 0;
+    }
+
+    #sequence-display img {
+        width: 28px;
+        height: 28px;
     }
 
     #error-display {
-        font-size: 4rem;
-        padding: 20px;
+        font-size: 3rem;
     }
 
     #stratagem-logo {
@@ -230,11 +649,6 @@ body {
     }
 
     #stratagem-display {
-        padding: 20px;
-    }
-
-    #sequence-display img {
-        width: 35px;
-        height: 35px;
+        padding: 24px 32px;
     }
 }
