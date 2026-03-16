@@ -25,13 +25,13 @@
       "type": "image/png"
     }
   ],
-  "orientation": "landscape",
+  "orientation": "portrait",
   "display": "fullscreen",
-  "dir": "left",
-  "lang": "en-En",
+  "dir": "ltr",
+  "lang": "en",
   "name": "htmHellpad, the Hellpad Simulator",
-  "start_url": "https://fusorf.github.io/htmHellpad/",
-  "scope": "https://fusorf.github.io/htmHellpad/",
+  "start_url": "./",
+  "scope": "./",
   "short_name": "htmHellpad",
   "description": "This project simulates the Helldivers' Hellpad, perfect for practicing stratagem launches or for cosplay purposes."
 }

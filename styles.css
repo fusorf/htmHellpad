@@ -1,16 +1,22 @@
 body {
     margin: 0;
-    height: 100vh;
-    display: flex;
-    justify-content: center;
-    align-items: center;
     background-color: black;
     overflow: hidden;
     font-family: 'Arial', sans-serif;
     color: white;
-    animation: flicker-init 1.5s linear forwards;
-    position: relative;
 }
+
+#app {
+    width: 100vw;
+    height: 100vh;
+    position: relative;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    animation: flicker 1.5s linear forwards;
+}
+
+/* --- Arrow buttons --- */
 
 .arrow {
     position: absolute;
@@ -18,9 +24,13 @@ body {
     height: 10em;
     display: flex;
     cursor: pointer;
-    transition: transform 0.1s ease, color 0.1s ease;
+    transition: transform 0.1s ease, opacity 0.1s ease;
     align-items: center;
     justify-content: center;
+    background: none;
+    border: none;
+    padding: 0;
+    -webkit-tap-highlight-color: transparent;
 }
 
 .arrow:active {
@@ -28,8 +38,15 @@ body {
     opacity: 0.7;
 }
 
+.arrow:focus-visible {
+    outline: 3px solid #ffe600;
+    outline-offset: 4px;
+    border-radius: 8px;
+}
+
 .arrow img {
-    height: 100px;
+    height: 6em;
+    pointer-events: none;
 }
 
 #up-arrow {
@@ -56,13 +73,15 @@ body {
     transform: translateY(-50%);
 }
 
+/* --- Stratagem display --- */
+
 #stratagem-display {
     position: absolute;
     top: 50%;
     left: 50%;
     transform: translate(-50%, -50%);
     text-align: center;
-    background-color: rgba(0, 0, 0);
+    background-color: rgb(0, 0, 0);
     padding: 40px;
     border-radius: 10px;
     box-shadow: 0 0 10px rgba(0, 255, 0, 0.5);
@@ -73,6 +92,8 @@ body {
     width: 150px;
     height: 150px;
 }
+
+/* --- Error display --- */
 
 #error-display {
     position: absolute;
@@ -89,12 +110,17 @@ body {
     z-index: 10;
 }
 
+/* --- Sequence display --- */
+
 #sequence-display {
     position: absolute;
     top: 50%;
     left: 50%;
     transform: translate(-50%, -50%);
     display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 4px;
     z-index: 5;
 }
 
@@ -103,6 +129,8 @@ body {
     height: 50px;
 }
 
+/* --- Overlay --- */
+
 #overlay {
     position: fixed;
     top: 0;
@@ -110,6 +138,7 @@ body {
     width: 100%;
     height: 100%;
     background: rgba(0, 0, 0, 0.8);
+    -webkit-backdrop-filter: blur(5px);
     backdrop-filter: blur(5px);
     z-index: 5;
 }
@@ -117,6 +146,8 @@ body {
 .hidden {
     display: none;
 }
+
+/* --- CRT effect --- */
 
 @keyframes flicker {
     0%, 19%, 21%, 23%, 25%, 54%, 56%, 100% {
@@ -127,16 +158,7 @@ body {
     }
 }
 
-@keyframes flicker-init {
-    0%, 19%, 21%, 23%, 25%, 54%, 56%, 100% {
-        opacity: 1;
-    }
-    20%, 24%, 55% {
-        opacity: 0;
-    }
-}
-
-body::before {
+#app::before {
     content: '';
     position: absolute;
     top: 0;
@@ -150,7 +172,7 @@ body::before {
     mix-blend-mode: overlay;
 }
 
-body::after {
+#app::after {
     content: '';
     position: absolute;
     top: 0;
@@ -160,4 +182,59 @@ body::after {
     background: rgba(0, 0, 0, 0.1);
     pointer-events: none;
     z-index: 2;
+}
+
+/* --- Portrait rotation (rotate html — no parent can clip it) --- */
+
+@media (orientation: portrait) {
+    html {
+        width: 100vh;
+        height: 100vw;
+        transform-origin: 0 0;
+        transform: translateY(100vh) rotate(-90deg);
+        overflow: hidden;
+    }
+
+    body {
+        overflow: visible;
+        width: 100%;
+        height: 100%;
+    }
+
+    #app {
+        width: 100%;
+        height: 100%;
+    }
+}
+
+/* --- Responsive (very small screens) --- */
+
+@media (max-height: 450px) {
+    .arrow {
+        width: 7em;
+        height: 7em;
+    }
+
+    .arrow img {
+        height: 4em;
+    }
+
+    #error-display {
+        font-size: 4rem;
+        padding: 20px;
+    }
+
+    #stratagem-logo {
+        width: 100px;
+        height: 100px;
+    }
+
+    #stratagem-display {
+        padding: 20px;
+    }
+
+    #sequence-display img {
+        width: 35px;
+        height: 35px;
+    }
 }
