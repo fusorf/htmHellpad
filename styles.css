@@ -48,7 +48,7 @@ body {
     width: 100vw;
     height: 100vh;
     background: #000000;
-    padding: 16px;
+    padding: max(16px, env(safe-area-inset-top)) max(16px, env(safe-area-inset-right)) max(16px, env(safe-area-inset-bottom)) max(16px, env(safe-area-inset-left));
     overflow: hidden;
     display: flex;
     flex-direction: column;
@@ -91,6 +91,8 @@ body {
     justify-content: space-between;
     position: relative;
     overflow: hidden;
+    padding-left: env(safe-area-inset-left);
+    padding-right: env(safe-area-inset-right);
 }
 
 /* Blueprint grid */
@@ -136,11 +138,11 @@ body {
 }
 
 .welcome-line-top {
-    margin-top: 24px;
+    margin-top: max(24px, env(safe-area-inset-top));
 }
 
 .welcome-line-bottom {
-    margin-bottom: 24px;
+    margin-bottom: max(24px, env(safe-area-inset-bottom));
 }
 
 .welcome-content {
@@ -241,6 +243,8 @@ body {
     background:
         radial-gradient(ellipse at center, #123d6e 0%, #0a2540 50%, #041520 100%);
     animation: app-reveal 0.6s ease-out forwards;
+    padding-left: env(safe-area-inset-left);
+    padding-right: env(safe-area-inset-right);
 }
 
 @keyframes app-reveal {
@@ -267,11 +271,11 @@ body {
 }
 
 .app-line-top {
-    margin-top: 24px;
+    margin-top: max(24px, env(safe-area-inset-top));
 }
 
 .app-line-bottom {
-    margin-bottom: 24px;
+    margin-bottom: max(24px, env(safe-area-inset-bottom));
 }
 
 /* --- App header (logo + sequence) --- */
@@ -528,7 +532,6 @@ body {
 #stratagem-logo {
     width: 160px;
     height: 160px;
-    filter: brightness(0) invert(1);
 }
 
 #stratagem-name {
