@@ -17,18 +17,67 @@
 </head>
 
 <body>
-    <div id="app">
+    <!-- Boot sequence -->
+    <div id="boot-screen">
+        <div id="boot-log"></div>
+    </div>
+
+    <!-- Welcome screen -->
+    <div id="welcome-screen" class="hidden">
+        <div class="welcome-line welcome-line-top"></div>
+        <div class="welcome-content">
+            <div class="welcome-scanline"></div>
+            <img src="images/helldivers_logo.svg" alt="Helldivers" class="welcome-logo">
+            <div class="welcome-text">
+                <span class="welcome-title">PERSONAL HELLPAD</span>
+                <span class="welcome-subtitle">SYSTEM</span>
+            </div>
+            <div class="welcome-meta">
+                <span>v4.2.1</span>
+            </div>
+            <div class="welcome-tap">TAP ANYWHERE TO UNLOCK</div>
+        </div>
+        <div class="welcome-line welcome-line-bottom"></div>
+    </div>
+
+    <!-- Main app -->
+    <div id="app" class="hidden">
+        <div class="blueprint-grid"></div>
         <div id="overlay" class="hidden"></div>
         <div id="stratagem-display" class="hidden">
             <img id="stratagem-logo" src="" alt="Stratagem Logo">
             <h1 id="stratagem-name"></h1>
+            <div class="strat-tap-hint">TAP TO DISMISS</div>
         </div>
         <div id="error-display" class="hidden">ERROR</div>
-        <div id="sequence-display"></div>
-        <button class="arrow" id="up-arrow" aria-label="Up"><img src="images/up-arrow.svg" alt="Up"></button>
-        <button class="arrow" id="down-arrow" aria-label="Down"><img src="images/down-arrow.svg" alt="Down"></button>
-        <button class="arrow" id="left-arrow" aria-label="Left"><img src="images/left-arrow.svg" alt="Left"></button>
-        <button class="arrow" id="right-arrow" aria-label="Right"><img src="images/right-arrow.svg" alt="Right"></button>
+
+        <div class="app-line app-line-top"></div>
+
+        <div id="app-header">
+            <img src="images/helldivers_logo.svg" alt="Helldivers" class="app-logo">
+            <div id="sequence-display"></div>
+        </div>
+
+        <div id="dpad">
+            <div class="dpad-row dpad-row-top">
+                <button class="arrow" id="up-arrow" aria-label="Up">
+                    <svg viewBox="0 0 24 24"><path d="M12 4l-8 8h5v8h6v-8h5z"/></svg>
+                </button>
+            </div>
+            <div class="dpad-row dpad-row-bottom">
+                <button class="arrow" id="left-arrow" aria-label="Left">
+                    <svg viewBox="0 0 24 24"><path d="M4 12l8-8v5h8v6h-8v5z"/></svg>
+                </button>
+                <button class="arrow" id="down-arrow" aria-label="Down">
+                    <svg viewBox="0 0 24 24"><path d="M12 20l8-8h-5V4h-6v8H4z"/></svg>
+                </button>
+                <button class="arrow" id="right-arrow" aria-label="Right">
+                    <svg viewBox="0 0 24 24"><path d="M20 12l-8-8v5H4v6h8v5z"/></svg>
+                </button>
+            </div>
+        </div>
+
+        <div class="app-line app-line-bottom"></div>
     </div>
 
     <script src="lowLag.js"></script>
