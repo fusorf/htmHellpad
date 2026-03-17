@@ -1,42 +1,55 @@
-# htmHellpad — Helldivers 2 Hellpad Simulator
+# htmHellpad
 
-A web-based Hellpad simulator for practicing Helldivers 2 stratagem input sequences. Built as a mobile-first PWA, designed to run on a phone embedded in cosplay props (like Galactic Armory's Hellpad 3D print).
+Helldivers 2 Hellpad simulator. A PWA designed to run on a phone inside a 3D-printed stratagem pad case for cosplay. Works fully offline once installed.
 
 ## Features
 
-- **82 stratagems** — support weapons, orbitals, eagles, sentries, emplacements, backpacks, and vehicles
-- **Boot sequence** — in-universe verbose console boot with SEAF terminal branding
-- **Welcome screen** — blueprint-style display with Helldivers logo, acts as idle screensaver (30s timeout)
-- **D-pad input** — keyboard-style arrow layout with touch, click, and keyboard support (arrows + WASD + AZERTY)
-- **Visual feedback** — stratagem logo/name popup on success, error flash on wrong input
-- **Audio feedback** — directional button sounds, activation and error sounds
-- **Sci-fi UI** — Orbitron font, blueprint grid, CRT scanlines, vignette, glow effects
-- **Portrait rotation** — auto-rotates to landscape on portrait screens via CSS transform
-- **PWA** — installable, works offline with precached assets
+- **82 stratagems** with SVG icons, directional input sequences, and prefix matching
+- **Immersive boot sequence** — SEMOX kernel, BIOS POST, orbital uplink, threat assessment, ASCII art header. Configurable duration and line weights
+- **Welcome screen** — blueprint-style idle screen with Helldivers logo, doubles as screensaver after configurable timeout
+- **Stratagem activation screen** — fullscreen display with logo, name, GPU-accelerated progress bar, and status text. Tap/key to dismiss or auto-dismiss
+- **Voicelines** — Super Destroyer and Eagle 1 PA lines on stratagem activation, randomly selected per category (weapons, sentries, orbitals, eagles, backpacks, mines, emplacements, hellbomb)
+- **D-pad input** — touch, click, and keyboard (arrow keys + WASD + AZERTY). Inputs blocked during animations
+- **Audio feedback** — directional button sounds, activation chime, error buzz
+- **Sci-fi UI** — Orbitron font, blueprint grid, CRT scanlines, horizontal glow lines, vignette. Consistent across all screens
+- **Portrait rotation** — CSS transform rotates to landscape on portrait phones. Configurable rotation direction
+- **PWA** — installable via "Add to Home Screen", fully offline with service worker precaching
+- **Configurable** — `config.js` for ship name, operator name, timings, orientation, boot skip, auto-dismiss
 
-## PWA Installation
+## Configuration
 
-1. Open the app at [https://fusorf.github.io/htmHellpad/](https://fusorf.github.io/htmHellpad/) on your mobile browser
-2. Tap "Share" (iOS Safari) or menu (Android Chrome)
-3. Select "Add to Home Screen"
-4. Open from your home screen for fullscreen landscape mode
+Edit `config.js` to customize:
+
+| Setting | Default | Description |
+|---|---|---|
+| `HELLDIVER_NAME` | `'HELLDIVER [UNREGISTERED]'` | Operator name in boot sequence |
+| `SHIP_NAME` | `'Star of Democracy'` | Super Destroyer name |
+| `FLIP_ORIENTATION` | `false` | Rotate screen 180 degrees |
+| `BOOT_DURATION` | `7000` | Boot sequence length (ms) |
+| `ERROR_DURATION` | `1000` | Error flash time (ms) |
+| `IDLE_TIMEOUT` | `10000` | Screensaver delay (ms) |
+| `STRATAGEM_DURATION` | `3500` | Progress bar duration (ms) |
+| `VOICELINE_DELAY` | `800` | Delay before voiceline (ms) |
+| `SKIP_BOOT` | `false` | Skip boot, go to welcome screen |
+| `AUTO_DISMISS_STRATAGEM` | `false` | Auto-dismiss 1s after progress completes |
+
+## Installation
+
+1. Open [https://fusorf.github.io/htmHellpad/](https://fusorf.github.io/htmHellpad/) on your phone
+2. Tap Share (iOS) or Menu (Android) > "Add to Home Screen"
+3. Open from home screen for fullscreen landscape mode
+4. Put the phone in your 3D-printed Hellpad case
 
 ## Local Development
 
+No build system. Serve the files and go:
+
 ```sh
-git clone https://github.com/your-username/htmhellpad.git
-cd htmhellpad
 python -m http.server 8001
 ```
 
-Open `http://localhost:8001` in your browser.
-
 ## Credits
 
-- Stratagem SVGs from [nvigneux/Helldivers-2-Stratagems-icons-svg](https://github.com/nvigneux/Helldivers-2-Stratagems-icons-svg)
-- Sound effects: for personal use only, not owned by this project
-- Fonts: [Orbitron](https://fonts.google.com/specimen/Orbitron), [Share Tech Mono](https://fonts.google.com/specimen/Share+Tech+Mono) (Google Fonts)
-
-## License
-
-This project is for educational and entertainment purposes only.
+- Stratagem SVGs: [nvigneux/Helldivers-2-Stratagems-icons-svg](https://github.com/nvigneux/Helldivers-2-Stratagems-icons-svg)
+- Fonts: [Orbitron](https://fonts.google.com/specimen/Orbitron), [Share Tech Mono](https://fonts.google.com/specimen/Share+Tech+Mono)
+- Sound effects for personal use only

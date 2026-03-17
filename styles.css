@@ -49,10 +49,10 @@ body {
     height: 100vh;
     background: #000000;
     padding: max(16px, env(safe-area-inset-top)) max(16px, env(safe-area-inset-right)) max(16px, env(safe-area-inset-bottom)) max(16px, env(safe-area-inset-left));
-    overflow: hidden;
+    overflow-y: auto;
     display: flex;
     flex-direction: column;
-    justify-content: flex-end;
+    justify-content: flex-start;
 }
 
 #boot-log {
@@ -77,10 +77,8 @@ body {
 }
 
 /* ============================================
-   WELCOME SCREEN
+   SHARED SCREEN BASE
    ============================================ */
-
-/* === Shared screen base === */
 
 #welcome-screen,
 #stratagem-screen,
@@ -156,7 +154,9 @@ body {
     margin-bottom: max(24px, env(safe-area-inset-bottom));
 }
 
-/* === Welcome screen === */
+/* ============================================
+   WELCOME SCREEN
+   ============================================ */
 
 .welcome-content {
     display: flex;
@@ -489,7 +489,8 @@ body {
     display: flex;
     flex-direction: column;
     gap: clamp(2px, 0.5vh, 4px);
-    width: 95%;
+    width: 70vh;
+    max-width: 95%;
     margin-top: clamp(12px, 3vh, 36px);
 }
 
@@ -500,23 +501,28 @@ body {
 }
 
 .strat-progress-fill {
+    width: 100%;
     height: clamp(16px, 5vh, 64px);
     background: rgba(255, 255, 255, 0.1);
     position: relative;
+    overflow: hidden;
 }
 
-.strat-progress-fill::before {
-    content: '';
+#strat-progress-bar {
     position: absolute;
-    inset: 0;
+    top: 0;
+    left: 0;
+    bottom: 0;
+    width: 100%;
     background: #fff;
     transform-origin: left;
-    animation: progress-load 5s linear forwards;
+    transform: scaleX(0);
+    will-change: transform;
 }
 
 @keyframes progress-load {
-    from { transform: scaleX(0); }
-    to { transform: scaleX(1); }
+    0% { transform: scaleX(0); }
+    100% { transform: scaleX(1); }
 }
 
 #strat-status {

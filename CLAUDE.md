@@ -1,38 +1,44 @@
 # htmHellpad
 
-Helldivers 2 Hellpad simulator — practice stratagem input sequences with visual/audio feedback. Built as a mobile-first PWA for use in cosplay props.
+Helldivers 2 Hellpad simulator — PWA for cosplay props. Runs on a phone inside a 3D-printed stratagem pad case. Fully offline.
 
 ## Architecture
 
 Pure static frontend — no build system, no bundler, no package manager.
 
-- `index.html` — Single page with three screens: boot sequence, welcome screen, main app. Semantic HTML (`<button>` for arrows, `<div id="app">` wrapper for portrait rotation)
-- `scripts.js` — All game logic wrapped in an IIFE: boot sequence, screen transitions, stratagem definitions (82 stratagems), input handling, sequence matching, idle screensaver. Supports touch, click, and keyboard (arrows + WASD/AZERTY)
-- `styles.css` — Helldivers-themed UI with Orbitron font, blueprint-style backgrounds, CRT scanline/vignette effects, responsive breakpoints, portrait-to-landscape CSS rotation
-- `lowLag.js` — Third-party low-latency audio lib (AudioContext / SoundManager2 / audioTag fallback)
+- `index.html` — Single page with four screens: boot, welcome, stratagem, app
+- `config.js` — All tweakable constants (timings, names, toggles)
+- `scripts.js` — All game logic in an IIFE: boot sequence, screen transitions, 82 stratagems with sound mappings, input handling, sequence matching, idle screensaver, voiceline playback
+- `styles.css` — Helldivers-themed UI. Shared screen base (background, grid, scanlines, glow lines), responsive, portrait rotation
+- `lowLag.js` — Third-party low-latency audio lib for button sounds
 - `sm2/` — SoundManager2 library (fallback audio engine)
-- `service-worker.js` — PWA offline caching with precache manifest (all assets listed explicitly)
-- `manifest.json` — PWA manifest, landscape fullscreen, relative URLs
+- `service-worker.js` — PWA offline caching with precache manifest
+- `manifest.json` — PWA manifest, landscape fullscreen
 
-## Key Concepts
+## Screens
 
-- **Boot Sequence**: Console-style verbose boot with weighted line delays (some lines take longer). White/green/yellow text on black. ~3s duration + 0.5s hold on last line
-- **Welcome Screen**: Blueprint-style blue background, Helldivers logo SVG, "PERSONAL HELLPAD SYSTEM" text, horizontal glow lines. Acts as screensaver — reappears after 30s idle. Tap anywhere to enter app
-- **Stratagems**: Array `STRATAGEMS` in `scripts.js` — each has `name`, `logo` (SVG path), `sequence` (array of directions). 82 stratagems total including vehicles
-- **Input**: D-pad layout (up alone on top row, left/down/right on bottom row). Fires on `touchstart` (mobile) or `click` (desktop). Keyboard: arrow keys + WASD + AZERTY (z/q). Inputs blocked during display via `isProcessing` flag
-- **Matching**: `findMatch()` does prefix matching — finds first stratagem whose sequence starts with current input. No match = immediate error. Complete match = show stratagem
-- **Audio**: `lowLag` plays activation sound on success, error sound on failure. Directional sounds on intermediate inputs. Audio init deferred until app screen (needs user gesture)
-- **Stratagem Display**: Large popup with logo + name, tap anywhere to dismiss. Blue-themed border and glow
-- **Error Display**: Red flash animation, auto-dismisses after 1s
-- **Idle Screensaver**: After 30s of no input, returns to welcome screen. Any input/direction resets the timer
-- **Portrait Rotation**: CSS `transform: translateY(100vh) rotate(-90deg)` on `<html>` element. Uses negative rotation because the html element has no CSS parent to clip it before transform. Also attempts `screen.orientation.lock('landscape')` for installed PWA
+1. **Boot** — SEMOX ASCII art, DemocracyKernel, BIOS POST, hardware init, security, orbital uplink to ship, stratagem mount, threat assessment. Top-down scrolling. Configurable duration, skippable
+2. **Welcome** — Blueprint background, Helldivers logo with pulse glow, "PERSONAL HELLPAD SYSTEM". Acts as screensaver. Tap/click/key to enter app
+3. **App** — D-pad input (touch/click/keyboard), sequence display with frame, arrow icons. Error flash with overlay on wrong input
+4. **Stratagem** — Own screen with same background. Logo in frame, name, progress bar (GPU-accelerated scaleX), "STRATAGEM SENT" status. Voiceline plays after delay. Tap/key to dismiss or auto-dismiss
+
+## Key Implementation Details
+
+- **Input**: D-pad fires on `touchstart` (mobile) or `click` (desktop). Keyboard: arrows + WASD + AZERTY. `isProcessing` flag blocks input during displays
+- **Matching**: `findMatch()` does prefix matching on input sequence against all 82 stratagems
+- **Audio**: `lowLag` for low-latency button/activation/error sounds. `new Audio()` with preload for voicelines (Super Destroyer / Eagle 1 PA lines, randomly selected per category)
+- **Progress bar**: Real DOM element, CSS `@keyframes` with `transform: scaleX()` + `will-change: transform` for GPU compositing. Restarted via inline style `animation: none` + `requestAnimationFrame`
+- **Portrait rotation**: CSS `transform: rotate(90deg)` on `<html>` with `translateX(100vw)`. Configurable flip via `.rotation-alt` class. Also attempts `screen.orientation.lock('landscape')`
+- **Shared screen base**: All screens (welcome, stratagem, app) share background gradient, `::before` blueprint grid, `::after` scanlines, `.screen-line` horizontal glow lines
 
 ## File Layout
 
 ```
+config.js        — Tweakable constants
 images/          — SVG stratagem icons (82) + arrow buttons + PWA icons + helldivers_logo.svg
-sounds/          — MP3/OGG audio (button-up/down/left/right, activation, error)
-sm2/             — SoundManager2 lib (JS + SWF)
+sounds/          — MP3/OGG button sounds + activation + error
+sounds/stratagems/ — MP3 voicelines (Eagle 1, Super Destroyer)
+sm2/             — SoundManager2 lib
 ```
 
 ## Dependencies
@@ -44,8 +50,6 @@ sm2/             — SoundManager2 lib (JS + SWF)
 ## Dev Notes
 
 - No build step — edit files directly, serve with `python -m http.server`
-- Mobile: landscape orientation, touch input. Desktop: mouse + keyboard
-- PWA: installable via "Add to Home Screen" on mobile
 - Stratagem SVGs from nvigneux/Helldivers-2-Stratagems-icons-svg
-- Portrait rotation: must use `rotate(-90deg)` not `rotate(90deg)` — positive rotation sends content off-viewport. The transform is on `<html>` itself to avoid parent overflow clipping
 - 2 stratagems missing SVGs (not in community repo): B/FLAM-80 Cremator, A/GM-17 Gas Mortar Sentry
+- Portrait rotation: `rotate(90deg)` is default, `rotate(-90deg)` via `FLIP_ORIENTATION` config
