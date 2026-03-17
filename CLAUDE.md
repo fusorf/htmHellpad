@@ -53,3 +53,4 @@ sm2/             — SoundManager2 lib
 - Stratagem SVGs from nvigneux/Helldivers-2-Stratagems-icons-svg
 - 2 stratagems missing SVGs (not in community repo): B/FLAM-80 Cremator, A/GM-17 Gas Mortar Sentry
 - Portrait rotation: `rotate(90deg)` is default, `rotate(-90deg)` via `FLIP_ORIENTATION` config
+- **Service worker**: After any significant update, bump `CACHE_NAME` version in `service-worker.js` (e.g. `htmhellpad-v3` to `htmhellpad-v4`). If new files were added (sounds, images, scripts), add them to `PRECACHE_ASSETS`. This forces the PWA to re-download all assets on next launch

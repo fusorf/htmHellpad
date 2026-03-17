@@ -1,4 +1,4 @@
-const CACHE_NAME = "htmhellpad-v3";
+const CACHE_NAME = "htmhellpad-v4";
 
 const PRECACHE_ASSETS = [
     './',
@@ -52,6 +52,7 @@ const PRECACHE_ASSETS = [
     // Helldivers logo
     './images/helldivers_logo.svg',
     // PWA icons
+    './images/libertystar.png',
     './images/apple-touch-icon.png',
     './images/favicon-16x16.png',
     './images/favicon-32x32.png',

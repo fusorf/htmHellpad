@@ -1,6 +1,7 @@
 /* === HTMHELLPAD — Helldivers UI === */
 
 @import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Share+Tech+Mono&display=swap');
+@import url('https://fonts.cdnfonts.com/css/perfect-dos-vga-437');
 
 :root {
     --hd-black: #0a0a0a;
@@ -48,32 +49,61 @@ body {
     width: 100vw;
     height: 100vh;
     background: #000000;
-    padding: max(16px, env(safe-area-inset-top)) max(16px, env(safe-area-inset-right)) max(16px, env(safe-area-inset-bottom)) max(16px, env(safe-area-inset-left));
+    padding: max(8px, env(safe-area-inset-top)) max(8px, env(safe-area-inset-right)) max(8px, env(safe-area-inset-bottom)) max(8px, env(safe-area-inset-left));
     overflow-y: auto;
     display: flex;
     flex-direction: column;
     justify-content: flex-start;
+    font-family: 'Perfect DOS VGA 437', monospace;
+    font-size: clamp(10px, 1.8vh, 16px);
+    line-height: 1.4;
+    color: #aaaaaa;
+}
+
+#boot-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    white-space: pre;
+    margin-bottom: 0;
+}
+
+#boot-header-left {
+    color: #ffffff;
+}
+
+#boot-logo {
+    height: clamp(80px, 16vh, 160px);
+    width: auto;
+    image-rendering: pixelated;
+    image-rendering: -moz-crisp-edges;
+    image-rendering: crisp-edges;
+    flex-shrink: 0;
+    margin-top: 8px;
+    margin-right: 12px;
 }
 
 #boot-log {
-    font-family: var(--hd-font-mono);
-    font-size: 14px;
-    line-height: 1.5;
-    color: var(--hd-white);
     white-space: pre;
-    opacity: 0.9;
+    flex: 1;
 }
 
-#boot-log .boot-ok {
-    color: var(--hd-green);
+#boot-footer {
+    color: #ffffff;
+    padding-top: 0.5em;
+    flex-shrink: 0;
+}
+
+#boot-log .boot-heading {
+    color: #ffffff;
 }
 
 #boot-log .boot-warn {
-    color: var(--hd-yellow);
+    color: #ffff55;
 }
 
 #boot-log .boot-fail {
-    color: var(--hd-red);
+    color: #ff5555;
 }
 
 /* ============================================

@@ -9,85 +9,66 @@
 
     // --- Boot sequence (weight = relative display time) ---
     var BOOT_LINES = [
-        // ASCII header
-        { text: '  ____  ____  __  __  _____  ___ ', weight: 0 },
-        { text: ' / ___|| ___||  \\/  |/ _ \\ \\/ / ', weight: 0 },
-        { text: ' \\___ \\| _|  | |\\/| | | | \\  /  ', weight: 0 },
-        { text: '  ___) | |___| |  | | |_| /  \\  ', weight: 0 },
-        { text: ' |____/|_____|_|  |_|\\___/_/\\_\\ ', weight: 0 },
-        { text: '  Super Earth Military Operating eXecutive', weight: 0 },
-        { text: '  DemocracyKernel v6.14-LIBERTY (aarch64-seaf)', weight: 1 },
         { text: '', weight: 1 },
-        // BIOS / POST
-        { text: '[BIOS] SEAF Tactical BIOS rev 2.08', weight: 2 },
-        { text: '[BIOS] Vendor: Ministry of Defense // Lot: SE-2184-C', weight: 1 },
-        { text: '[POST] Running power-on self-test...', weight: 8 },
-        { text: '[  OK] CPU: LibertyCore A78 @ 2.4GHz ......... PASS', weight: 1 },
-        { text: '[  OK] Memory: 512MB SuperRAM DDR5 ............ PASS', weight: 2 },
-        { text: '[  OK] NAND: 4GB PatriotFlash ................. PASS', weight: 1 },
-        { text: '[  OK] Secure boot chain ...................... VERIFIED', weight: 1 },
-        { text: '[POST] Self-test complete. 0 errors.', weight: 2 },
+        // POST
+        { text: 'Memory test: 512MB SuperRAM DDR5 .............. OK', weight: 10 },
+        { text: 'NAND: 4GB PatriotFlash ....................... OK', weight: 1 },
+        { text: 'Secure boot chain ............................ VERIFIED', weight: 1 },
         { text: '', weight: 1 },
         // Kernel boot
-        { text: '[BOOT] Loading DemocracyKernel ...', weight: 9 },
-        { text: '[  OK] Kernel image ........................... 1.8MB', weight: 1 },
-        { text: '[  OK] Decompressing freedom modules .......... DONE', weight: 2 },
-        { text: '[  OK] Initializing /dev/liberty .............. MOUNTED', weight: 1 },
-        { text: '[  OK] Managed democracy subroutine ........... INITIALIZED', weight: 1 },
-        { text: '[  OK] Democracy enforcement module ........... LOADED', weight: 2 },
-        { text: '[  OK] Civic duty scheduler ................... ACTIVE', weight: 1 },
+        { text: 'Loading DemocracyKernel v6.14-LIBERTY ...', weight: 9 },
+        { text: '  Kernel image 1.8MB ......................... OK', weight: 1 },
+        { text: '  Decompressing freedom modules .............. OK', weight: 2 },
+        { text: '  Initializing /dev/liberty .................. MOUNTED', weight: 1 },
+        { text: '  Democracy enforcement module ............... LOADED', weight: 2 },
+        { text: '  Civic duty scheduler ....................... ACTIVE', weight: 1 },
         { text: '', weight: 1 },
         // Hardware init
-        { text: '[INIT] SEAF Hellpad Terminal v4.2.1', weight: 2 },
-        { text: '[  OK] Neural interface adapter ............... DETECTED', weight: 1 },
-        { text: '[  OK] Touch input digitizer .................. CALIBRATED', weight: 1 },
-        { text: '[  OK] Display driver ......................... ACTIVE', weight: 1 },
-        { text: '[  OK] Audio subsystem ........................ READY', weight: 1 },
-        { text: '[  OK] Haptic feedback motor .................. ONLINE', weight: 1 },
+        { text: 'Initializing SEAF Hellpad Terminal v4.2.1', weight: 2 },
+        { text: '  Neural interface adapter ................... DETECTED', weight: 1 },
+        { text: '  Touch input digitizer ...................... CALIBRATED', weight: 1 },
+        { text: '  Display driver ............................. ACTIVE', weight: 1 },
+        { text: '  Audio subsystem ............................ READY', weight: 1 },
+        { text: '  Haptic feedback motor ...................... ONLINE', weight: 1 },
         { text: '', weight: 1 },
         // Encryption & security
-        { text: '[SEC ] Initializing security layer ...', weight: 3 },
-        { text: '[  OK] Encryption: AES-512-FREEDOM ............ ACTIVE', weight: 1 },
-        { text: '[  OK] IFF transponder ........................ BROADCASTING', weight: 1 },
-        { text: '[  OK] Biometric lock ......................... BYPASSED (field mode)', weight: 1 },
-        { text: '[WARN] Operating without biometric auth — report to SEAF-IT', weight: 2 },
+        { text: 'Initializing security layer ...', weight: 3 },
+        { text: '  Encryption: AES-512-FREEDOM ................ ACTIVE', weight: 1 },
+        { text: '  IFF transponder ............................ BROADCASTING', weight: 1 },
+        { text: '  Biometric lock ............................. BYPASSED (field mode)', weight: 1 },
+        { text: '[WARN] Operating without biometric auth', weight: 2 },
         { text: '', weight: 1 },
         // Network & uplink
-        { text: '[NET ] Establishing orbital uplink ...', weight: 4 },
-        { text: '[  OK] Orbital relay frequency ................ 447.200 MHz', weight: 1 },
-        { text: '[  OK] Signal strength ........................ -42 dBm (EXCELLENT)', weight: 1 },
-        { text: '[  OK] Connected to Super Destroyer "' + CONFIG.SHIP_NAME + '"', weight: 3 },
-        { text: '[  OK] Eagle CAS datalink .................... SYNCED', weight: 1 },
-        { text: '[  OK] Pelican shuttle channel ................ STANDBY', weight: 1 },
-        { text: '[  OK] Galactic map telemetry ................. RECEIVING', weight: 2 },
+        { text: 'Establishing orbital uplink ...', weight: 4 },
+        { text: '  Orbital relay frequency .................... 447.200 MHz', weight: 1 },
+        { text: '  Signal strength ............................ -42 dBm (EXCELLENT)', weight: 1 },
+        { text: '  Connected to SES "' + CONFIG.SHIP_NAME + '"', weight: 3 },
+        { text: '  Eagle CAS datalink ......................... SYNCED', weight: 1 },
+        { text: '  Pelican shuttle channel .................... STANDBY', weight: 1 },
+        { text: '  Galactic map telemetry ..................... RECEIVING', weight: 2 },
         { text: '', weight: 1 },
         // Stratagem subsystem
-        { text: '[BOOT] Mounting /dev/stratagem ...', weight: 5 },
-        { text: '[  OK] Stratagem uplink module SU-47 .......... ONLINE', weight: 1 },
-        { text: '[  OK] 82 stratagems loaded from SEAF database', weight: 2 },
-        { text: '[  OK] Atmospheric targeting calibration ...... NOMINAL', weight: 2 },
-        { text: '[  OK] Hellbomb safety interlock .............. ARMED', weight: 1 },
+        { text: 'Mounting /dev/stratagem ...', weight: 5 },
+        { text: '  Stratagem uplink module SU-47 .............. ONLINE', weight: 1 },
+        { text: '  82 stratagems loaded ....................... OK', weight: 2 },
+        { text: '  Atmospheric targeting calibration .......... NOMINAL', weight: 2 },
+        { text: '  Hellbomb safety interlock .................. ARMED', weight: 1 },
         { text: '', weight: 1 },
         // Threat assessment
-        { text: '[THRT] Loading threat assessment protocols ...', weight: 3 },
-        { text: '[  OK] Anti-Terminid countermeasures .......... ACTIVE', weight: 1 },
-        { text: '[  OK] Anti-Automaton protocols ............... STANDBY', weight: 1 },
-        { text: '[  OK] Anti-Illuminate watchdog ............... LISTENING', weight: 1 },
-        { text: '[  OK] Liberty propagation array .............. NOMINAL', weight: 1 },
+        { text: 'Loading threat assessment protocols ...', weight: 3 },
+        { text: '  Anti-Terminid countermeasures .............. ACTIVE', weight: 1 },
+        { text: '  Anti-Automaton protocols ................... STANDBY', weight: 1 },
+        { text: '  Anti-Illuminate watchdog ................... LISTENING', weight: 1 },
+        { text: '  Liberty propagation array .................. NOMINAL', weight: 1 },
         { text: '', weight: 1 },
         // Firmware warning
         { text: '[WARN] Firmware update available (v4.2.2-hotfix)', weight: 2 },
-        { text: '[WARN] Changelog: "Fixed hellbomb arming on uneven terrain"', weight: 1 },
         { text: '', weight: 1 },
-        // Final banner
-        { text: '======================================================', weight: 1 },
-        { text: '  SUPER EARTH ARMED FORCES — HELLPAD TERMINAL', weight: 1 },
-        { text: '  Classification: RESTRICTED // SEAF-EYES-ONLY', weight: 1 },
-        { text: '  Operator: ' + CONFIG.HELLDIVER_NAME, weight: 1 },
-        { text: '  Vessel:   SES ' + CONFIG.SHIP_NAME, weight: 1 },
-        { text: '  "For Super Earth. For Democracy. For Liberty."', weight: 1 },
-        { text: '======================================================', weight: 1 },
-        { text: '[BOOT] System ready. Launching interface...', weight: 12 },
+        // Final
+        { text: 'Operator: ' + CONFIG.HELLDIVER_NAME, weight: 1 },
+        { text: 'Vessel:   SES ' + CONFIG.SHIP_NAME, weight: 1 },
+        { text: '', weight: 1 },
+        { text: 'System ready. Launching interface...', weight: 20 },
     ];
 
     var BOOT_DURATION = CONFIG.BOOT_DURATION;
@@ -110,12 +91,15 @@
             var line = entry.text;
             var span = document.createElement('div');
 
-            if (line.indexOf('[  OK]') === 0) {
-                span.innerHTML = '<span class="boot-ok">[  OK]</span>' + escapeHtml(line.substring(6));
-            } else if (line.indexOf('[WARN]') === 0) {
-                span.innerHTML = '<span class="boot-warn">[WARN]</span>' + escapeHtml(line.substring(6));
+            if (line.indexOf('[WARN]') === 0) {
+                span.classList.add('boot-warn');
+                span.textContent = line;
             } else if (line.indexOf('[FAIL]') === 0) {
-                span.innerHTML = '<span class="boot-fail">[FAIL]</span>' + escapeHtml(line.substring(6));
+                span.classList.add('boot-fail');
+                span.textContent = line;
+            } else if (line.length > 0 && line.charAt(0) !== ' ') {
+                span.classList.add('boot-heading');
+                span.textContent = line;
             } else {
                 span.textContent = line;
             }
