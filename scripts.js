@@ -1,6 +1,18 @@
 (function () {
     'use strict';
 
+    // --- Prevent scroll/zoom on touch devices ---
+    document.addEventListener('touchmove', function (e) {
+        e.preventDefault();
+    }, { passive: false });
+
+    // --- Resume AudioContext on interaction (iOS suspends it in background) ---
+    document.addEventListener('touchstart', function () {
+        if (window.lowLag && lowLag.audioContext && lowLag.audioContext.state === 'suspended') {
+            lowLag.audioContext.resume();
+        }
+    });
+
     // --- Constants (from config.js) ---
     var FLIP_ORIENTATION = CONFIG.FLIP_ORIENTATION;
     var ERROR_DURATION = CONFIG.ERROR_DURATION;
@@ -143,11 +155,34 @@
         welcomeScreen.classList.remove('hidden');
         stopIdleTimer();
 
+        // Start loading sounds now (AudioContext suspended, but XHR + decode runs)
+        if (!audioInitialized) {
+            initAudio();
+            audioInitialized = true;
+        }
+
         function onDismiss(e) {
             e.preventDefault();
             welcomeScreen.removeEventListener('click', onDismiss);
             welcomeScreen.removeEventListener('touchstart', onDismiss);
             document.removeEventListener('keydown', onKey);
+            // Resume AudioContext + pre-play all loaded buffers at zero volume
+            if (lowLag.audioContext) {
+                if (lowLag.audioContext.state === 'suspended') {
+                    lowLag.audioContext.resume();
+                }
+                var ctx = lowLag.audioContext;
+                var silentGain = ctx.createGain();
+                silentGain.gain.value = 0;
+                silentGain.connect(ctx.destination);
+                for (var tag in lowLag.audioBuffers) {
+                    var src = ctx.createBufferSource();
+                    src.buffer = lowLag.audioBuffers[tag];
+                    src.connect(silentGain);
+                    src.start(0);
+                    src.stop(ctx.currentTime + 0.001);
+                }
+            }
             showApp();
         }
         function onKey(e) {
@@ -163,10 +198,6 @@
     function showApp() {
         welcomeScreen.classList.add('hidden');
         appScreen.classList.remove('hidden');
-        if (!audioInitialized) {
-            initAudio();
-            audioInitialized = true;
-        }
         resetInput();
         resetIdleTimer();
     }

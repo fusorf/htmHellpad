@@ -29,7 +29,6 @@
 
 html {
     background: #000;
-    touch-action: none;
     overflow: hidden;
 }
 
@@ -38,7 +37,7 @@ body {
     background-color: var(--hd-black);
     overflow: hidden;
     overscroll-behavior: none;
-    touch-action: none;
+    touch-action: manipulation;
     font-family: var(--hd-font);
     color: var(--hd-white);
     -webkit-user-select: none;
@@ -247,7 +246,7 @@ body {
     font-family: var(--hd-font);
     font-size: 5cqw;
     font-weight: 700;
-    letter-spacing: 0.4em;
+    letter-spacing: 0.3em;
     color: var(--hd-blue-line);
     text-shadow: 0 0 10px var(--hd-blue-glow);
 }
