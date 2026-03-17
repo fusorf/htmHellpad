@@ -1,6 +1,9 @@
 (function () {
     'use strict';
 
+    // --- Config ---
+    var FLIP_ORIENTATION = false; // set to true to flip portrait rotation 180°
+
     // --- Constants ---
     var ERROR_DURATION = 1000;
     var IDLE_TIMEOUT = 10000;
@@ -253,6 +256,11 @@
     // --- Portrait: try native orientation lock ---
     if (screen.orientation && screen.orientation.lock) {
         screen.orientation.lock('landscape').catch(function () {});
+    }
+
+    // --- Apply orientation flip config ---
+    if (FLIP_ORIENTATION) {
+        document.documentElement.classList.add('rotation-alt');
     }
 
     // --- Input handling ---
