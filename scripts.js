@@ -9,66 +9,39 @@
 
     // --- Boot sequence (weight = relative display time) ---
     var BOOT_LINES = [
+        { text: '', weight: 0 },
+        { text: 'Memory test: 512MB SuperRAM DDR5 ......... OK', weight: 12 },
+        { text: 'NAND: 4GB PatriotFlash ................... OK', weight: 2 },
+        { text: 'Secure boot chain ........................ VERIFIED', weight: 3 },
+        { text: '', weight: 0 },
+        { text: '', weight: 0 },
+        { text: '', weight: 0 },
+        { text: '', weight: 2 },
+        { text: 'Loading DemocracyKernel v6.14-LIBERTY .... OK', weight: 16 },
+        { text: '  kernel 1.8MB decompressed, /dev/liberty mounted', weight: 2 },
+        { text: 'Initializing hardware ..... OK', weight: 4 },
+        { text: '  touch ok, display ok, audio ok, haptics ok', weight: 1 },
+        { text: 'AES-512-FREEDOM encryption ............... ACTIVE', weight: 4 },
+        { text: 'IFF transponder broadcasting', weight: 1 },
+        { text: 'Biometric lock BYPASSED (field mode)', weight: 1 },
+        { text: '[WARN] Operating without biometric auth', weight: 3 },
         { text: '', weight: 1 },
-        // POST
-        { text: 'Memory test: 512MB SuperRAM DDR5 .............. OK', weight: 10 },
-        { text: 'NAND: 4GB PatriotFlash ....................... OK', weight: 1 },
-        { text: 'Secure boot chain ............................ VERIFIED', weight: 1 },
-        { text: '', weight: 1 },
-        // Kernel boot
-        { text: 'Loading DemocracyKernel v6.14-LIBERTY ...', weight: 9 },
-        { text: '  Kernel image 1.8MB ......................... OK', weight: 1 },
-        { text: '  Decompressing freedom modules .............. OK', weight: 2 },
-        { text: '  Initializing /dev/liberty .................. MOUNTED', weight: 1 },
-        { text: '  Democracy enforcement module ............... LOADED', weight: 2 },
-        { text: '  Civic duty scheduler ....................... ACTIVE', weight: 1 },
-        { text: '', weight: 1 },
-        // Hardware init
-        { text: 'Initializing SEAF Hellpad Terminal v4.2.1', weight: 2 },
-        { text: '  Neural interface adapter ................... DETECTED', weight: 1 },
-        { text: '  Touch input digitizer ...................... CALIBRATED', weight: 1 },
-        { text: '  Display driver ............................. ACTIVE', weight: 1 },
-        { text: '  Audio subsystem ............................ READY', weight: 1 },
-        { text: '  Haptic feedback motor ...................... ONLINE', weight: 1 },
-        { text: '', weight: 1 },
-        // Encryption & security
-        { text: 'Initializing security layer ...', weight: 3 },
-        { text: '  Encryption: AES-512-FREEDOM ................ ACTIVE', weight: 1 },
-        { text: '  IFF transponder ............................ BROADCASTING', weight: 1 },
-        { text: '  Biometric lock ............................. BYPASSED (field mode)', weight: 1 },
-        { text: '[WARN] Operating without biometric auth', weight: 2 },
-        { text: '', weight: 1 },
-        // Network & uplink
-        { text: 'Establishing orbital uplink ...', weight: 4 },
-        { text: '  Orbital relay frequency .................... 447.200 MHz', weight: 1 },
-        { text: '  Signal strength ............................ -42 dBm (EXCELLENT)', weight: 1 },
-        { text: '  Connected to SES "' + CONFIG.SHIP_NAME + '"', weight: 3 },
-        { text: '  Eagle CAS datalink ......................... SYNCED', weight: 1 },
-        { text: '  Pelican shuttle channel .................... STANDBY', weight: 1 },
-        { text: '  Galactic map telemetry ..................... RECEIVING', weight: 2 },
-        { text: '', weight: 1 },
-        // Stratagem subsystem
-        { text: 'Mounting /dev/stratagem ...', weight: 5 },
-        { text: '  Stratagem uplink module SU-47 .............. ONLINE', weight: 1 },
-        { text: '  82 stratagems loaded ....................... OK', weight: 2 },
-        { text: '  Atmospheric targeting calibration .......... NOMINAL', weight: 2 },
-        { text: '  Hellbomb safety interlock .................. ARMED', weight: 1 },
-        { text: '', weight: 1 },
-        // Threat assessment
-        { text: 'Loading threat assessment protocols ...', weight: 3 },
-        { text: '  Anti-Terminid countermeasures .............. ACTIVE', weight: 1 },
-        { text: '  Anti-Automaton protocols ................... STANDBY', weight: 1 },
-        { text: '  Anti-Illuminate watchdog ................... LISTENING', weight: 1 },
-        { text: '  Liberty propagation array .................. NOMINAL', weight: 1 },
-        { text: '', weight: 1 },
-        // Firmware warning
+        { text: 'Establishing orbital uplink .............. CONNECTED', weight: 14 },
+        { text: '  447.200 MHz / -42 dBm / SES "' + CONFIG.SHIP_NAME + '"', weight: 3 },
+        { text: 'Eagle 1 CAS datalink ..................... SYNCED', weight: 3 },
+        { text: 'Mounting /dev/stratagem .................. OK', weight: 10 },
+        { text: '  82 stratagems loaded, targeting nominal', weight: 3 },
+        { text: '  hellbomb safety interlock armed', weight: 1 },
+        { text: 'Threat assessment ....................... DONE', weight: 4 },
+        { text: '  Terminid WATCH / Automaton STANDBY / Illuminate LISTENING', weight: 1 },
         { text: '[WARN] Firmware update available (v4.2.2-hotfix)', weight: 2 },
+        { text: '', weight: 0 },
+        { text: '', weight: 0 },
         { text: '', weight: 1 },
-        // Final
         { text: 'Operator: ' + CONFIG.HELLDIVER_NAME, weight: 1 },
-        { text: 'Vessel:   SES ' + CONFIG.SHIP_NAME, weight: 1 },
+        { text: 'Vessel:   SES ' + CONFIG.SHIP_NAME, weight: 2 },
         { text: '', weight: 1 },
-        { text: 'System ready. Launching interface...', weight: 20 },
+        { text: 'System ready. Launching interface...', weight: 15 },
     ];
 
     var BOOT_DURATION = CONFIG.BOOT_DURATION;
@@ -76,8 +49,23 @@
 
     var bootScreen = document.getElementById('boot-screen');
     var bootLog = document.getElementById('boot-log');
+    var bootScrollEl = bootLog;
     var welcomeScreen = document.getElementById('welcome-screen');
     var appScreen = document.getElementById('app');
+
+    // Splits: "  Text here .............. STATUS" → [label, dots, status]
+    var statusPattern = /^(.*?)\s*(\.{2,})\s+(\S.*)$/;
+
+    function scrollBoot() {
+        var firstLine = bootLog.querySelector('div');
+        if (!firstLine) return;
+        var lh = firstLine.offsetHeight;
+        if (lh <= 0) return;
+        // Show only full lines: calculate how many fit, scroll so bottom content is visible
+        var visibleLines = Math.floor(bootScrollEl.clientHeight / lh);
+        var targetScroll = bootScrollEl.scrollHeight - (visibleLines * lh);
+        bootScrollEl.scrollTop = Math.max(0, targetScroll);
+    }
 
     function runBootSequence() {
         var i = 0;
@@ -90,6 +78,8 @@
             var entry = BOOT_LINES[i];
             var line = entry.text;
             var span = document.createElement('div');
+            var match = statusPattern.exec(line);
+            var delay = (entry.weight / totalWeight) * BOOT_DURATION;
 
             if (line.indexOf('[WARN]') === 0) {
                 span.classList.add('boot-warn');
@@ -97,6 +87,32 @@
             } else if (line.indexOf('[FAIL]') === 0) {
                 span.classList.add('boot-fail');
                 span.textContent = line;
+            } else if (line === '') {
+                span.textContent = ' ';
+            } else if (match) {
+                if (line.charAt(0) !== ' ') span.classList.add('boot-heading');
+                var label = match[1] + ' ';
+                var totalDots = match[2].length;
+                var status = ' ' + match[3];
+                var dotCount = 0;
+                var dotInterval = delay / totalDots;
+
+                span.textContent = label;
+                bootLog.appendChild(span);
+                scrollBoot();
+                i++;
+
+                var dotTimer = setInterval(function () {
+                    dotCount++;
+                    span.textContent = label + '.'.repeat(dotCount);
+                    if (dotCount >= totalDots) {
+                        clearInterval(dotTimer);
+                        span.textContent = label + '.'.repeat(totalDots) + status;
+                        scrollBoot();
+                        setTimeout(addLine, 0);
+                    }
+                }, dotInterval);
+                return;
             } else if (line.length > 0 && line.charAt(0) !== ' ') {
                 span.classList.add('boot-heading');
                 span.textContent = line;
@@ -105,9 +121,7 @@
             }
 
             bootLog.appendChild(span);
-            bootScreen.scrollTop = bootScreen.scrollHeight;
-
-            var delay = (entry.weight / totalWeight) * BOOT_DURATION;
+            scrollBoot();
             i++;
             setTimeout(addLine, delay);
         }

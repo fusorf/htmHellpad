@@ -27,10 +27,15 @@
     padding: 0;
 }
 
+html {
+    background: #000;
+}
+
 body {
     margin: 0;
     background-color: var(--hd-black);
     overflow: hidden;
+    overscroll-behavior: none;
     font-family: var(--hd-font);
     color: var(--hd-white);
     -webkit-user-select: none;
@@ -42,92 +47,62 @@ body {
 }
 
 /* ============================================
-   BOOT SCREEN
+   16:9 CONTENT WRAPPER
+   Height = 100% of screen
+   Width = height × 16/9, centered
    ============================================ */
 
-#boot-screen {
-    width: 100vw;
-    height: 100vh;
-    background: #000000;
-    padding: max(8px, env(safe-area-inset-top)) max(8px, env(safe-area-inset-right), calc((100vw - 100vh * 16 / 9) / 2)) max(8px, env(safe-area-inset-bottom)) max(8px, env(safe-area-inset-left), calc((100vw - 100vh * 16 / 9) / 2));
-    overflow-y: auto;
-    display: flex;
-    flex-direction: column;
-    justify-content: flex-start;
-    font-family: 'Perfect DOS VGA 437', monospace;
-    font-size: clamp(10px, 1.8vh, 16px);
-    line-height: 1.4;
-    color: #aaaaaa;
-}
-
-#boot-header {
-    display: flex;
-    justify-content: space-between;
-    align-items: flex-start;
-    white-space: pre;
-    margin-bottom: 0;
-}
-
-#boot-header-left {
-    color: #ffffff;
-}
-
-#boot-logo {
-    height: clamp(80px, 16vh, 160px);
-    width: auto;
-    image-rendering: pixelated;
-    image-rendering: -moz-crisp-edges;
-    image-rendering: crisp-edges;
-    flex-shrink: 0;
-    margin-top: 8px;
-    margin-right: 12px;
-}
-
-#boot-log {
-    white-space: pre;
-    flex: 1;
-}
-
-#boot-footer {
-    color: #ffffff;
-    padding-top: 0.5em;
-    flex-shrink: 0;
-}
-
-#boot-log .boot-heading {
-    color: #ffffff;
-}
-
-#boot-log .boot-warn {
-    color: #ffff55;
-}
-
-#boot-log .boot-fail {
-    color: #ff5555;
-}
-
-/* ============================================
-   SHARED SCREEN BASE
-   ============================================ */
-
-#welcome-screen,
-#stratagem-screen,
-#app {
-    width: 100vw;
-    height: 100vh;
+.screen-content {
+    width: 100%;
+    height: 100%;
+    max-width: calc(100dvh * 16 / 9);
+    margin: 0 auto;
+    container-type: size;
     display: flex;
     flex-direction: column;
     align-items: center;
     justify-content: space-between;
     position: relative;
-    overflow: hidden;
-    background:
-        radial-gradient(ellipse at center, var(--hd-blue-bg) 0%, #061520 70%, #020a10 100%);
-    padding-left: max(env(safe-area-inset-left), calc((100vw - 100vh * 16 / 9) / 2));
-    padding-right: max(env(safe-area-inset-right), calc((100vw - 100vh * 16 / 9) / 2));
+    z-index: 2;
 }
 
-/* Blueprint grid */
+/* ============================================
+   SCREENS (full viewport + background)
+   ============================================ */
+
+#boot-screen,
+#welcome-screen,
+#stratagem-screen,
+#app {
+    width: 100dvw;
+    height: 100dvh;
+    overflow: hidden;
+}
+
+@media (display-mode: standalone) {
+    #boot-screen,
+    #welcome-screen,
+    #stratagem-screen,
+    #app {
+        width: 100vw;
+        height: 100vh;
+    }
+}
+
+#boot-screen {
+    background: #000;
+    position: relative;
+}
+
+#welcome-screen,
+#stratagem-screen,
+#app {
+    position: relative;
+    background:
+        radial-gradient(ellipse at center, var(--hd-blue-bg) 0%, #061520 70%, #020a10 100%);
+}
+
+/* Blueprint grid — fills full screen */
 #welcome-screen::before,
 #stratagem-screen::before,
 #app::before {
@@ -142,7 +117,7 @@ body {
     z-index: 0;
 }
 
-/* Scanlines */
+/* Scanlines — fills full screen */
 #welcome-screen::after,
 #stratagem-screen::after,
 #app::after {
@@ -160,7 +135,63 @@ body {
     z-index: 1;
 }
 
-/* Horizontal glow lines */
+/* ============================================
+   BOOT SCREEN
+   ============================================ */
+
+#boot-screen > .screen-content {
+    align-items: stretch;
+    justify-content: flex-start;
+    font-family: 'Perfect DOS VGA 437', monospace;
+    font-size: 1.8cqh;
+    line-height: 1.4;
+    color: #aaaaaa;
+    padding: 2cqh 1.5cqw 0;
+}
+
+#boot-header {
+    white-space: pre;
+    flex-shrink: 0;
+    color: #ffffff;
+}
+
+#boot-logo {
+    position: absolute;
+    top: 2cqh;
+    right: 1.5cqw;
+    height: 30cqh;
+    width: auto;
+    image-rendering: pixelated;
+    image-rendering: -moz-crisp-edges;
+    image-rendering: crisp-edges;
+    z-index: 1;
+}
+
+#boot-log {
+    white-space: pre;
+    flex: 1;
+    min-height: 0;
+    overflow: hidden;
+}
+
+#boot-log div {
+    min-height: 1lh;
+}
+
+#boot-footer {
+    color: #ffffff;
+    flex-shrink: 0;
+    padding: 1cqh 0 2cqh;
+}
+
+#boot-log .boot-heading { color: #ffffff; }
+#boot-log .boot-warn { color: #ffff55; }
+#boot-log .boot-fail { color: #ff5555; }
+
+/* ============================================
+   GLOW LINES
+   ============================================ */
+
 .screen-line {
     width: 100%;
     height: 1px;
@@ -177,11 +208,11 @@ body {
 }
 
 .screen-line-top {
-    margin-top: max(24px, env(safe-area-inset-top));
+    margin-top: 5cqh;
 }
 
 .screen-line-bottom {
-    margin-bottom: max(24px, env(safe-area-inset-bottom));
+    margin-bottom: 5cqh;
 }
 
 /* ============================================
@@ -193,13 +224,13 @@ body {
     flex-direction: column;
     align-items: center;
     justify-content: center;
-    gap: 24px;
+    gap: 3cqh;
     flex: 1;
     z-index: 2;
 }
 
 .welcome-logo {
-    width: min(70%, 500px);
+    width: min(70%, 60cqw);
     height: auto;
     color: var(--hd-blue-line);
     filter: drop-shadow(0 0 8px var(--hd-blue-glow)) drop-shadow(0 0 20px var(--hd-blue-glow));
@@ -215,12 +246,12 @@ body {
     display: flex;
     flex-direction: column;
     align-items: center;
-    gap: 2px;
+    gap: 0.5cqh;
 }
 
 .welcome-title {
     font-family: var(--hd-font);
-    font-size: clamp(24px, 5.5vw, 42px);
+    font-size: 5cqw;
     font-weight: 700;
     letter-spacing: 0.4em;
     color: var(--hd-blue-line);
@@ -231,8 +262,8 @@ body {
     display: flex;
     flex-direction: column;
     align-items: center;
-    gap: 4px;
-    font-size: 13px;
+    gap: 1cqh;
+    font-size: 1.8cqh;
     letter-spacing: 0.3em;
     color: var(--hd-blue-light);
     opacity: 0.4;
@@ -240,7 +271,7 @@ body {
 }
 
 .welcome-tap {
-    font-size: 14px;
+    font-size: 2cqh;
     letter-spacing: 0.4em;
     color: var(--hd-blue-light);
     opacity: 0;
@@ -252,7 +283,6 @@ body {
     50% { opacity: 0.5; }
 }
 
-/* Welcome fade-in */
 #welcome-screen .welcome-content {
     animation: welcome-fadein 0.3s ease-out;
 }
@@ -266,20 +296,18 @@ body {
    MAIN APP
    ============================================ */
 
-/* --- App header (logo + sequence) --- */
-
 #app-header {
     display: flex;
     flex-direction: column;
     align-items: center;
-    gap: 12px;
+    gap: 2cqh;
     z-index: 10;
     flex-shrink: 0;
-    padding: 8px 0;
+    padding: 1.5cqh 0;
 }
 
 .app-logo {
-    height: clamp(20px, 6vh, 40px);
+    height: 5cqh;
     width: auto;
     color: var(--hd-blue-line);
     filter: drop-shadow(0 0 8px var(--hd-blue-glow)) drop-shadow(0 0 20px var(--hd-blue-glow));
@@ -296,35 +324,27 @@ body {
     display: flex;
     flex-direction: column;
     align-items: center;
-    gap: 6px;
+    gap: 1.5cqh;
     z-index: 10;
     flex-shrink: 0;
-    padding: 4px 0;
+    padding: 1cqh 0;
 }
 
 .dpad-row {
     display: flex;
-    gap: 6px;
-}
-
-.dpad-row-top {
-    justify-content: center;
-}
-
-.dpad-row-bottom {
-    justify-content: center;
+    gap: 1.5cqh;
 }
 
 .arrow {
     display: flex;
     align-items: center;
     justify-content: center;
-    width: min(22vh, 100px);
-    height: min(22vh, 100px);
+    width: 22cqh;
+    height: 22cqh;
     cursor: pointer;
     background: linear-gradient(145deg, rgba(25, 55, 85, 0.7), rgba(10, 25, 45, 0.85));
     border: 2px solid rgba(200, 230, 255, 0.25);
-    border-radius: 8px;
+    border-radius: 2cqh;
     padding: 0;
     -webkit-tap-highlight-color: transparent;
     transition: all 0.08s ease;
@@ -332,23 +352,21 @@ body {
     overflow: hidden;
 }
 
-/* Inner glow on idle */
 .arrow::before {
     content: '';
     position: absolute;
     inset: 0;
-    border-radius: 6px;
+    border-radius: 1.5cqh;
     background: radial-gradient(ellipse at center, rgba(168, 212, 240, 0.04) 0%, transparent 70%);
     pointer-events: none;
 }
 
-/* Corner accents */
 .arrow::after {
     content: '';
     position: absolute;
-    inset: 4px;
+    inset: 1cqh;
     border: 1px solid rgba(200, 230, 255, 0.1);
-    border-radius: 4px;
+    border-radius: 1cqh;
     pointer-events: none;
 }
 
@@ -389,11 +407,11 @@ body {
     flex-wrap: nowrap;
     justify-content: center;
     align-items: center;
-    gap: 10px;
+    gap: 1.5cqw;
     z-index: 10;
     width: 100%;
-    height: 56px;
-    padding: 0 20px;
+    height: 14cqh;
+    padding: 0 3cqw;
     background:
         linear-gradient(90deg,
             transparent 0%,
@@ -402,13 +420,11 @@ body {
             rgba(6, 21, 32, 0.5) 85%,
             transparent 100%
         );
-    border: none;
     border-top: 1px solid rgba(200, 230, 255, 0.08);
     border-bottom: 1px solid rgba(200, 230, 255, 0.08);
     position: relative;
 }
 
-/* Subtle side fade accents */
 #sequence-display::before,
 #sequence-display::after {
     content: '';
@@ -435,8 +451,8 @@ body {
 }
 
 #sequence-display img {
-    width: 40px;
-    height: 40px;
+    width: 10cqh;
+    height: 10cqh;
     filter: brightness(0) invert(1) opacity(0.9);
     animation: arrow-pop 0.15s ease-out;
 }
@@ -471,7 +487,7 @@ body {
     display: flex;
     align-items: center;
     justify-content: center;
-    padding: clamp(12px, 3vh, 32px) clamp(24px, 6vw, 60px);
+    padding: 3cqh 6cqw;
     background:
         linear-gradient(90deg,
             transparent 0%,
@@ -499,29 +515,29 @@ body {
 .strat-logo-frame::after { right: 10%; }
 
 #stratagem-logo {
-    width: min(45vh, 45vw, 400px);
-    height: min(45vh, 45vw, 400px);
+    width: min(45cqh, 45cqw);
+    height: min(45cqh, 45cqw);
     flex-shrink: 1;
 }
 
 #stratagem-name {
     font-family: var(--hd-font);
-    font-size: clamp(16px, 3vh, 32px);
+    font-size: 3.5cqh;
     font-weight: 700;
     color: var(--hd-blue-line);
     letter-spacing: 0.15em;
     text-transform: uppercase;
-    margin-top: clamp(8px, 2vh, 16px);
+    margin-top: 2cqh;
     text-shadow: 0 0 10px var(--hd-blue-glow);
 }
 
 .strat-progress {
     display: flex;
     flex-direction: column;
-    gap: clamp(2px, 0.5vh, 4px);
-    width: 70vh;
+    gap: 0.5cqh;
+    width: 70cqw;
     max-width: 95%;
-    margin-top: clamp(12px, 3vh, 36px);
+    margin-top: 3cqh;
 }
 
 .strat-progress-bar-h {
@@ -532,7 +548,7 @@ body {
 
 .strat-progress-fill {
     width: 100%;
-    height: clamp(16px, 5vh, 64px);
+    height: 5cqh;
     background: rgba(255, 255, 255, 0.1);
     position: relative;
     overflow: hidden;
@@ -562,7 +578,7 @@ body {
     align-items: center;
     justify-content: center;
     font-family: var(--hd-font);
-    font-size: clamp(12px, 2.5vh, 24px);
+    font-size: 2.5cqh;
     font-weight: 900;
     letter-spacing: 0.3em;
     text-transform: uppercase;
@@ -584,7 +600,7 @@ body {
 }
 
 /* ============================================
-   ERROR DISPLAY
+   ERROR + OVERLAY (outside .screen-content)
    ============================================ */
 
 #error-display {
@@ -593,7 +609,7 @@ body {
     left: 50%;
     transform: translate(-50%, -50%);
     font-family: var(--hd-font);
-    font-size: clamp(3rem, 12vw, 7rem);
+    font-size: 12vmin;
     font-weight: 900;
     color: var(--hd-red);
     text-align: center;
@@ -608,10 +624,6 @@ body {
     50% { opacity: 0.3; }
 }
 
-/* ============================================
-   OVERLAY
-   ============================================ */
-
 #overlay {
     position: absolute;
     inset: 0;
@@ -622,71 +634,60 @@ body {
 }
 
 /* ============================================
-   PORTRAIT ROTATION
+   PORTRAIT → LANDSCAPE ROTATION
    ============================================ */
 
 @media (orientation: portrait) {
     html {
+        width: 100dvh;
+        height: 100dvw;
+        transform-origin: 0 0;
+        transform: translateX(100dvw) rotate(90deg);
+        overflow: hidden;
+    }
+
+    html.rotation-alt {
+        transform: translateY(100dvh) rotate(-90deg);
+    }
+
+    body {
+        overflow: hidden;
+        width: 100%;
+        height: 100%;
+    }
+
+    #boot-screen,
+    #welcome-screen,
+    #stratagem-screen,
+    #app {
+        width: 100%;
+        height: 100%;
+    }
+
+    .screen-content {
+        max-width: calc(100dvw * 16 / 9);
+    }
+}
+
+/* PWA: use vh/vw to fill full screen including safe areas */
+@media (display-mode: standalone) and (orientation: portrait) {
+    html {
         width: 100vh;
         height: 100vw;
-        transform-origin: 0 0;
         transform: translateX(100vw) rotate(90deg);
-        overflow: hidden;
     }
 
     html.rotation-alt {
         transform: translateY(100vh) rotate(-90deg);
     }
 
-    body {
-        overflow: visible;
-        width: 100%;
-        height: 100%;
-    }
-
-    #boot-screen,
-    #welcome-screen,
-    #stratagem-screen,
-    #app {
-        width: 100%;
-        height: 100%;
-    }
-
-    /* In portrait rotated: visual width = 100vh, visual height = 100vw */
-    #boot-screen,
-    #welcome-screen,
-    #stratagem-screen,
-    #app {
-        padding-left: max(8px, calc((100vh - 100vw * 16 / 9) / 2));
-        padding-right: max(8px, calc((100vh - 100vw * 16 / 9) / 2));
+    .screen-content {
+        max-width: calc(100vw * 16 / 9);
     }
 }
 
-/* ============================================
-   RESPONSIVE (small screens)
-   ============================================ */
-
-@media (max-height: 450px) {
-    .arrow {
-        width: min(18vh, 80px);
-        height: min(18vh, 80px);
-    }
-
-    .app-logo {
-        height: clamp(16px, 4vh, 28px);
-    }
-
-    #app-header {
-        gap: 6px;
-        padding: 4px 0;
-    }
-
-    #sequence-display img {
-        width: 28px;
-        height: 28px;
-    }
-
-    #error-display {
-        font-size: 3rem;
+@media (display-mode: standalone) {
+    .screen-content {
+        max-width: calc(100vh * 16 / 9);
     }
 }

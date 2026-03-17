@@ -3,7 +3,11 @@
 
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no, viewport-fit=cover">
+    <script>
+        var isPWA = window.navigator.standalone || window.matchMedia('(display-mode: standalone)').matches;
+        var vf = isPWA ? 'cover' : 'contain';
+        document.write('<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no, viewport-fit=' + vf + '">');
+    </script>
     <title>HTMHELLPAD</title>
     <link rel="stylesheet" href="styles.css">
     <link rel="manifest" href="manifest.json">
@@ -20,50 +24,54 @@
 <body>
     <!-- Boot sequence -->
     <div id="boot-screen">
-        <div id="boot-header">
-            <div id="boot-header-left">SEAF Tactical BIOS (C) 2184 Ministry of Defense
-LibertyCore(tm) A78 Processor @ 2.4GHz</div>
+        <div class="screen-content">
             <img id="boot-logo" src="images/libertystar.png" alt="Liberty Star">
+            <div id="boot-header">SEAF Tactical BIOS (C) 2184 Ministry of Defense
+LibertyCore(tm) A78 Processor @ 2.4GHz</div>
+            <div id="boot-log"></div>
+            <div id="boot-footer">Press DEL to enter SETUP, F12 for Boot Menu</div>
         </div>
-        <div id="boot-log"></div>
-        <div id="boot-footer">Press DEL to enter SETUP, F12 for Boot Menu</div>
     </div>
 
     <!-- Welcome screen -->
     <div id="welcome-screen" class="hidden">
-        <div class="screen-line screen-line-top"></div>
-        <div class="welcome-content">
-            <img src="images/helldivers_logo.svg" alt="Helldivers" class="welcome-logo">
-            <div class="welcome-text">
-                <span class="welcome-title">PERSONAL HELLPAD</span>
-                <span class="welcome-title">SYSTEM</span>
+        <div class="screen-content">
+            <div class="screen-line screen-line-top"></div>
+            <div class="welcome-content">
+                <img src="images/helldivers_logo.svg" alt="Helldivers" class="welcome-logo">
+                <div class="welcome-text">
+                    <span class="welcome-title">PERSONAL HELLPAD</span>
+                    <span class="welcome-title">SYSTEM</span>
+                </div>
+                <div class="welcome-meta">
+                    <span>v4.2.1</span>
+                </div>
+                <div class="welcome-tap">TAP ANYWHERE TO UNLOCK</div>
             </div>
-            <div class="welcome-meta">
-                <span>v4.2.1</span>
-            </div>
-            <div class="welcome-tap">TAP ANYWHERE TO UNLOCK</div>
+            <div class="screen-line screen-line-bottom"></div>
         </div>
-        <div class="screen-line screen-line-bottom"></div>
     </div>
 
     <!-- Stratagem screen -->
     <div id="stratagem-screen" class="hidden">
-        <div class="screen-line screen-line-top"></div>
-        <div id="stratagem-display">
-            <div class="strat-logo-frame">
-                <img id="stratagem-logo" src="" alt="Stratagem Logo">
-            </div>
-            <h1 id="stratagem-name"></h1>
-            <div class="strat-progress">
-                <div class="strat-progress-bar-h"></div>
-                <div class="strat-progress-fill">
-                    <div id="strat-progress-bar"></div>
-                    <div id="strat-status">STRATAGEM SENT</div>
+        <div class="screen-content">
+            <div class="screen-line screen-line-top"></div>
+            <div id="stratagem-display">
+                <div class="strat-logo-frame">
+                    <img id="stratagem-logo" src="" alt="Stratagem Logo">
                 </div>
-                <div class="strat-progress-bar-h"></div>
+                <h1 id="stratagem-name"></h1>
+                <div class="strat-progress">
+                    <div class="strat-progress-bar-h"></div>
+                    <div class="strat-progress-fill">
+                        <div id="strat-progress-bar"></div>
+                        <div id="strat-status">STRATAGEM SENT</div>
+                    </div>
+                    <div class="strat-progress-bar-h"></div>
+                </div>
             </div>
+            <div class="screen-line screen-line-bottom"></div>
         </div>
-        <div class="screen-line screen-line-bottom"></div>
     </div>
 
     <!-- Main app -->
@@ -71,33 +79,35 @@ LibertyCore(tm) A78 Processor @ 2.4GHz</div>
         <div id="overlay" class="hidden"></div>
         <div id="error-display" class="hidden">ERROR</div>
 
-        <div class="screen-line screen-line-top"></div>
+        <div class="screen-content">
+            <div class="screen-line screen-line-top"></div>
 
-        <div id="app-header">
-            <img src="images/helldivers_logo.svg" alt="Helldivers" class="app-logo">
-            <div id="sequence-display"></div>
-        </div>
-
-        <div id="dpad">
-            <div class="dpad-row dpad-row-top">
-                <button class="arrow" id="up-arrow" aria-label="Up">
-                    <svg viewBox="0 0 24 24"><path d="M12 4l-8 8h5v8h6v-8h5z"/></svg>
-                </button>
+            <div id="app-header">
+                <img src="images/helldivers_logo.svg" alt="Helldivers" class="app-logo">
+                <div id="sequence-display"></div>
             </div>
-            <div class="dpad-row dpad-row-bottom">
-                <button class="arrow" id="left-arrow" aria-label="Left">
-                    <svg viewBox="0 0 24 24"><path d="M4 12l8-8v5h8v6h-8v5z"/></svg>
-                </button>
-                <button class="arrow" id="down-arrow" aria-label="Down">
-                    <svg viewBox="0 0 24 24"><path d="M12 20l8-8h-5V4h-6v8H4z"/></svg>
-                </button>
-                <button class="arrow" id="right-arrow" aria-label="Right">
-                    <svg viewBox="0 0 24 24"><path d="M20 12l-8-8v5H4v6h8v5z"/></svg>
-                </button>
-            </div>
-        </div>
 
-        <div class="screen-line screen-line-bottom"></div>
+            <div id="dpad">
+                <div class="dpad-row dpad-row-top">
+                    <button class="arrow" id="up-arrow" aria-label="Up">
+                        <svg viewBox="0 0 24 24"><path d="M12 4l-8 8h5v8h6v-8h5z"/></svg>
+                    </button>
+                </div>
+                <div class="dpad-row dpad-row-bottom">
+                    <button class="arrow" id="left-arrow" aria-label="Left">
+                        <svg viewBox="0 0 24 24"><path d="M4 12l8-8v5h8v6h-8v5z"/></svg>
+                    </button>
+                    <button class="arrow" id="down-arrow" aria-label="Down">
+                        <svg viewBox="0 0 24 24"><path d="M12 20l8-8h-5V4h-6v8H4z"/></svg>
+                    </button>
+                    <button class="arrow" id="right-arrow" aria-label="Right">
+                        <svg viewBox="0 0 24 24"><path d="M20 12l-8-8v5H4v6h8v5z"/></svg>
+                    </button>
+                </div>
+            </div>
+
+            <div class="screen-line screen-line-bottom"></div>
+        </div>
     </div>
 
     <script src="config.js"></script>
