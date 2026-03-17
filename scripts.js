@@ -3,7 +3,7 @@
 
     // --- Constants ---
     var ERROR_DURATION = 1000;
-    var IDLE_TIMEOUT = 30000;
+    var IDLE_TIMEOUT = 10000;
 
     // --- Boot sequence (weight = relative display time) ---
     var BOOT_LINES = [

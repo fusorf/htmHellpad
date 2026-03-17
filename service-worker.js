@@ -1,4 +1,4 @@
-const CACHE_NAME = "htmhellpad-v1";
+const CACHE_NAME = "htmhellpad-v2";
 
 const PRECACHE_ASSETS = [
     './',
