@@ -80,23 +80,29 @@ body {
    WELCOME SCREEN
    ============================================ */
 
-#welcome-screen {
+/* === Shared screen base === */
+
+#welcome-screen,
+#stratagem-screen,
+#app {
     width: 100vw;
     height: 100vh;
-    background:
-        radial-gradient(ellipse at center, var(--hd-blue-bg) 0%, #061520 70%, #020a10 100%);
     display: flex;
     flex-direction: column;
     align-items: center;
     justify-content: space-between;
     position: relative;
     overflow: hidden;
+    background:
+        radial-gradient(ellipse at center, var(--hd-blue-bg) 0%, #061520 70%, #020a10 100%);
     padding-left: env(safe-area-inset-left);
     padding-right: env(safe-area-inset-right);
 }
 
 /* Blueprint grid */
-#welcome-screen::before {
+#welcome-screen::before,
+#stratagem-screen::before,
+#app::before {
     content: '';
     position: absolute;
     inset: 0;
@@ -105,25 +111,29 @@ body {
         linear-gradient(90deg, rgba(168, 212, 240, 0.04) 1px, transparent 1px);
     background-size: 40px 40px;
     pointer-events: none;
+    z-index: 0;
 }
 
-/* Scan line sweep */
-.welcome-scanline {
+/* Scanlines */
+#welcome-screen::after,
+#stratagem-screen::after,
+#app::after {
+    content: '';
     position: absolute;
     inset: 0;
-    background: linear-gradient(
+    background: repeating-linear-gradient(
         to bottom,
-        transparent 0%,
-        rgba(168, 212, 240, 0.03) 50%,
-        transparent 100%
+        transparent 0px,
+        transparent 2px,
+        rgba(0, 0, 0, 0.15) 2px,
+        rgba(0, 0, 0, 0.15) 4px
     );
-    background-size: 100% 4px;
-    background-repeat: repeat;
     pointer-events: none;
     z-index: 1;
 }
 
-.welcome-line {
+/* Horizontal glow lines */
+.screen-line {
     width: 100%;
     height: 1px;
     background: linear-gradient(
@@ -135,15 +145,18 @@ body {
     );
     flex-shrink: 0;
     box-shadow: 0 0 12px var(--hd-blue-glow), 0 0 30px var(--hd-blue-glow);
+    z-index: 10;
 }
 
-.welcome-line-top {
+.screen-line-top {
     margin-top: max(24px, env(safe-area-inset-top));
 }
 
-.welcome-line-bottom {
+.screen-line-bottom {
     margin-bottom: max(24px, env(safe-area-inset-bottom));
 }
+
+/* === Welcome screen === */
 
 .welcome-content {
     display: flex;
@@ -215,59 +228,13 @@ body {
 }
 
 @keyframes welcome-fadein {
-    from { opacity: 0; transform: scale(0.98); }
-    to { opacity: 1; transform: scale(1); }
+    from { opacity: 0; }
+    to { opacity: 1; }
 }
 
 /* ============================================
    MAIN APP
    ============================================ */
-
-#app {
-    width: 100vw;
-    height: 100vh;
-    position: relative;
-    display: flex;
-    flex-direction: column;
-    justify-content: space-between;
-    align-items: center;
-    background:
-        radial-gradient(ellipse at center, #123d6e 0%, #0a2540 50%, #041520 100%);
-    animation: app-reveal 0.6s ease-out forwards;
-    padding-left: env(safe-area-inset-left);
-    padding-right: env(safe-area-inset-right);
-}
-
-@keyframes app-reveal {
-    0%   { opacity: 0; transform: scale(1.02); filter: brightness(1.5) blur(4px); }
-    40%  { opacity: 1; filter: brightness(1.2) blur(1px); }
-    100% { opacity: 1; transform: scale(1); filter: brightness(1) blur(0px); }
-}
-
-/* --- App lines (top/bottom) --- */
-
-.app-line {
-    width: 100%;
-    height: 1px;
-    background: linear-gradient(
-        90deg,
-        transparent 0%,
-        var(--hd-blue-line) 20%,
-        var(--hd-blue-line) 80%,
-        transparent 100%
-    );
-    flex-shrink: 0;
-    z-index: 10;
-    box-shadow: 0 0 12px var(--hd-blue-glow), 0 0 30px var(--hd-blue-glow);
-}
-
-.app-line-top {
-    margin-top: max(24px, env(safe-area-inset-top));
-}
-
-.app-line-bottom {
-    margin-bottom: max(24px, env(safe-area-inset-bottom));
-}
 
 /* --- App header (logo + sequence) --- */
 
@@ -284,48 +251,11 @@ body {
 .app-logo {
     height: clamp(20px, 6vh, 40px);
     width: auto;
-    opacity: 0.7;
-    filter: drop-shadow(0 0 6px var(--hd-blue-glow));
+    color: var(--hd-blue-line);
+    filter: drop-shadow(0 0 8px var(--hd-blue-glow)) drop-shadow(0 0 20px var(--hd-blue-glow));
+    animation: welcome-pulse 2s ease-in-out infinite;
     position: relative;
     z-index: 11;
-}
-
-/* Blueprint grid on app */
-#app > .blueprint-grid {
-    position: absolute;
-    inset: 0;
-    background-image:
-        linear-gradient(rgba(180, 220, 255, 0.07) 1px, transparent 1px),
-        linear-gradient(90deg, rgba(180, 220, 255, 0.07) 1px, transparent 1px);
-    background-size: 40px 40px;
-    pointer-events: none;
-    z-index: 0;
-}
-
-/* CRT scanlines */
-#app::before {
-    content: '';
-    position: absolute;
-    inset: 0;
-    background: repeating-linear-gradient(
-        to bottom,
-        transparent 0px,
-        transparent 2px,
-        rgba(0, 0, 0, 0.15) 2px,
-        rgba(0, 0, 0, 0.15) 4px
-    );
-    pointer-events: none;
-    z-index: 100;
-}
-
-/* Vignette */
-#app::after {
-    content: '';
-    position: absolute;
-    inset: 0;
-    background: radial-gradient(ellipse at center, transparent 50%, rgba(2, 10, 16, 0.5) 100%);
-    pointer-events: none;
-    z-index: 100;
 }
 
 /* ============================================
@@ -472,13 +402,6 @@ body {
             rgba(6, 21, 32, 0.25) 85%,
             transparent 100%
         );
-    border-top-color: rgba(200, 230, 255, 0.04);
-    border-bottom-color: rgba(200, 230, 255, 0.04);
-}
-
-#sequence-display:empty::before,
-#sequence-display:empty::after {
-    opacity: 0.3;
 }
 
 #sequence-display img {
@@ -498,50 +421,130 @@ body {
    ============================================ */
 
 #stratagem-display {
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
     text-align: center;
-    background: rgba(6, 21, 32, 0.95);
-    padding: 40px 60px;
-    border: 2px solid var(--hd-blue-light);
-    border-radius: 6px;
-    box-shadow:
-        0 0 30px var(--hd-blue-glow),
-        0 0 60px rgba(168, 212, 240, 0.15),
-        inset 0 0 30px rgba(168, 212, 240, 0.05);
-    z-index: 50;
+    z-index: 2;
     animation: strat-appear 0.2s ease-out;
 }
 
 @keyframes strat-appear {
-    from { opacity: 0; transform: translate(-50%, -50%) scale(0.9); }
-    to { opacity: 1; transform: translate(-50%, -50%) scale(1); }
+    from { opacity: 0; }
+    to { opacity: 1; }
 }
 
+.strat-logo-frame {
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: clamp(12px, 3vh, 32px) clamp(24px, 6vw, 60px);
+    background:
+        linear-gradient(90deg,
+            transparent 0%,
+            rgba(6, 21, 32, 0.5) 15%,
+            rgba(10, 35, 60, 0.5) 50%,
+            rgba(6, 21, 32, 0.5) 85%,
+            transparent 100%
+        );
+    border-top: 1px solid rgba(200, 230, 255, 0.08);
+    border-bottom: 1px solid rgba(200, 230, 255, 0.08);
+}
+
+.strat-logo-frame::before,
+.strat-logo-frame::after {
+    content: '';
+    position: absolute;
+    top: 25%;
+    bottom: 25%;
+    width: 1px;
+    background: linear-gradient(to bottom, transparent, rgba(200, 230, 255, 0.15), transparent);
+    pointer-events: none;
+}
+
+.strat-logo-frame::before { left: 10%; }
+.strat-logo-frame::after { right: 10%; }
+
 #stratagem-logo {
-    width: 160px;
-    height: 160px;
+    width: min(45vh, 45vw, 400px);
+    height: min(45vh, 45vw, 400px);
+    flex-shrink: 1;
 }
 
 #stratagem-name {
     font-family: var(--hd-font);
-    font-size: clamp(20px, 4vw, 32px);
+    font-size: clamp(16px, 3vh, 32px);
     font-weight: 700;
     color: var(--hd-blue-line);
     letter-spacing: 0.15em;
     text-transform: uppercase;
-    margin-top: 16px;
+    margin-top: clamp(8px, 2vh, 16px);
     text-shadow: 0 0 10px var(--hd-blue-glow);
 }
 
-#stratagem-display .strat-tap-hint {
-    font-size: 12px;
+.strat-progress {
+    display: flex;
+    flex-direction: column;
+    gap: clamp(2px, 0.5vh, 4px);
+    width: 95%;
+    margin-top: clamp(12px, 3vh, 36px);
+}
+
+.strat-progress-bar-h {
+    width: 100%;
+    height: 2px;
+    background: #fff;
+}
+
+.strat-progress-fill {
+    height: clamp(16px, 5vh, 64px);
+    background: rgba(255, 255, 255, 0.1);
+    position: relative;
+}
+
+.strat-progress-fill::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: #fff;
+    transform-origin: left;
+    animation: progress-load 5s linear forwards;
+}
+
+@keyframes progress-load {
+    from { transform: scaleX(0); }
+    to { transform: scaleX(1); }
+}
+
+#strat-status {
+    position: absolute;
+    inset: 0;
+    display: none;
+    align-items: center;
+    justify-content: center;
+    font-family: var(--hd-font);
+    font-size: clamp(12px, 2.5vh, 24px);
+    font-weight: 900;
     letter-spacing: 0.3em;
-    color: var(--hd-blue-light);
-    opacity: 0.4;
-    margin-top: 20px;
+    text-transform: uppercase;
+    z-index: 1;
+}
+
+#strat-status.sent {
+    display: flex;
+    color: #041520;
+}
+
+#stratagem-screen.strat-dismiss #stratagem-display {
+    animation: strat-disappear 0.3s ease-in forwards;
+}
+
+@keyframes strat-disappear {
+    from { opacity: 1; }
+    to { opacity: 0; }
 }
 
 /* ============================================
@@ -607,6 +610,7 @@ body {
 
     #boot-screen,
     #welcome-screen,
+    #stratagem-screen,
     #app {
         width: 100%;
         height: 100%;
@@ -639,14 +643,5 @@ body {
 
     #error-display {
         font-size: 3rem;
-    }
-
-    #stratagem-logo {
-        width: 100px;
-        height: 100px;
-    }
-
-    #stratagem-display {
-        padding: 24px 32px;
     }
 }

@@ -101,14 +101,19 @@
         welcomeScreen.classList.remove('hidden');
         stopIdleTimer();
 
-        function onTap(e) {
+        function onDismiss(e) {
             e.preventDefault();
-            welcomeScreen.removeEventListener('click', onTap);
-            welcomeScreen.removeEventListener('touchstart', onTap);
+            welcomeScreen.removeEventListener('click', onDismiss);
+            welcomeScreen.removeEventListener('touchstart', onDismiss);
+            document.removeEventListener('keydown', onKey);
             showApp();
         }
-        welcomeScreen.addEventListener('click', onTap);
-        welcomeScreen.addEventListener('touchstart', onTap);
+        function onKey(e) {
+            onDismiss(e);
+        }
+        welcomeScreen.addEventListener('click', onDismiss);
+        welcomeScreen.addEventListener('touchstart', onDismiss);
+        document.addEventListener('keydown', onKey);
     }
 
     var audioInitialized = false;
@@ -226,6 +231,7 @@
     ];
 
     // --- DOM refs ---
+    var stratagemScreen = document.getElementById('stratagem-screen');
     var displayElement = document.getElementById('stratagem-display');
     var logoElement = document.getElementById('stratagem-logo');
     var nameElement = document.getElementById('stratagem-name');
@@ -348,30 +354,50 @@
         clearSequenceDisplay();
     }
 
-    function displayStratagem(stratagem) {
-        isProcessing = true;
-        logoElement.src = stratagem.logo;
-        nameElement.textContent = stratagem.name;
-        displayElement.classList.remove('hidden');
-        overlay.classList.remove('hidden');
+    var STRATAGEM_DURATION = 5000;
 
-        function dismiss(e) {
-            e.preventDefault();
-            e.stopPropagation();
-            overlay.removeEventListener('click', dismiss);
-            overlay.removeEventListener('touchstart', dismiss);
-            displayElement.removeEventListener('click', dismiss);
-            displayElement.removeEventListener('touchstart', dismiss);
-            displayElement.classList.add('hidden');
-            overlay.classList.add('hidden');
+    var stratStatus = document.getElementById('strat-status');
+
+    function dismissStratagem(e) {
+        if (e) e.preventDefault();
+        stratagemScreen.removeEventListener('click', dismissStratagem);
+        stratagemScreen.removeEventListener('touchstart', dismissStratagem);
+        document.removeEventListener('keydown', dismissStratagem);
+        stratagemScreen.classList.add('strat-dismiss');
+        setTimeout(function () {
+            stratagemScreen.classList.add('hidden');
+            stratagemScreen.classList.remove('strat-dismiss');
+            appScreen.classList.remove('hidden');
+            stratStatus.classList.remove('sent');
             resetInput();
             isProcessing = false;
             resetIdleTimer();
-        }
-        overlay.addEventListener('click', dismiss);
-        overlay.addEventListener('touchstart', dismiss);
-        displayElement.addEventListener('click', dismiss);
-        displayElement.addEventListener('touchstart', dismiss);
+        }, 300);
+    }
+
+    function displayStratagem(stratagem) {
+        isProcessing = true;
+        stopIdleTimer();
+        logoElement.src = stratagem.logo;
+        nameElement.textContent = stratagem.name;
+        stratStatus.classList.remove('sent');
+
+        // Restart progress bar animation by re-inserting the fill element
+        var fill = displayElement.querySelector('.strat-progress-fill');
+        var clone = fill.cloneNode(true);
+        fill.parentNode.replaceChild(clone, fill);
+        // Re-acquire status ref since it's inside the cloned fill
+        stratStatus = clone.querySelector('#strat-status');
+
+        appScreen.classList.add('hidden');
+        stratagemScreen.classList.remove('hidden', 'strat-dismiss');
+
+        setTimeout(function () {
+            stratStatus.classList.add('sent');
+            stratagemScreen.addEventListener('click', dismissStratagem);
+            stratagemScreen.addEventListener('touchstart', dismissStratagem);
+            document.addEventListener('keydown', dismissStratagem);
+        }, STRATAGEM_DURATION);
     }
 
     function displayError() {

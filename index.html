@@ -25,9 +25,8 @@
 
     <!-- Welcome screen -->
     <div id="welcome-screen" class="hidden">
-        <div class="welcome-line welcome-line-top"></div>
+        <div class="screen-line screen-line-top"></div>
         <div class="welcome-content">
-            <div class="welcome-scanline"></div>
             <img src="images/helldivers_logo.svg" alt="Helldivers" class="welcome-logo">
             <div class="welcome-text">
                 <span class="welcome-title">PERSONAL HELLPAD</span>
@@ -38,21 +37,34 @@
             </div>
             <div class="welcome-tap">TAP ANYWHERE TO UNLOCK</div>
         </div>
-        <div class="welcome-line welcome-line-bottom"></div>
+        <div class="screen-line screen-line-bottom"></div>
+    </div>
+
+    <!-- Stratagem screen -->
+    <div id="stratagem-screen" class="hidden">
+        <div class="screen-line screen-line-top"></div>
+        <div id="stratagem-display">
+            <div class="strat-logo-frame">
+                <img id="stratagem-logo" src="" alt="Stratagem Logo">
+            </div>
+            <h1 id="stratagem-name"></h1>
+            <div class="strat-progress">
+                <div class="strat-progress-bar-h"></div>
+                <div class="strat-progress-fill">
+                    <div id="strat-status">REQUEST SENT</div>
+                </div>
+                <div class="strat-progress-bar-h"></div>
+            </div>
+        </div>
+        <div class="screen-line screen-line-bottom"></div>
     </div>
 
     <!-- Main app -->
     <div id="app" class="hidden">
-        <div class="blueprint-grid"></div>
         <div id="overlay" class="hidden"></div>
-        <div id="stratagem-display" class="hidden">
-            <img id="stratagem-logo" src="" alt="Stratagem Logo">
-            <h1 id="stratagem-name"></h1>
-            <div class="strat-tap-hint">STRATAGEM READY!</div>
-        </div>
         <div id="error-display" class="hidden">ERROR</div>
 
-        <div class="app-line app-line-top"></div>
+        <div class="screen-line screen-line-top"></div>
 
         <div id="app-header">
             <img src="images/helldivers_logo.svg" alt="Helldivers" class="app-logo">
@@ -78,7 +90,7 @@
             </div>
         </div>
 
-        <div class="app-line app-line-bottom"></div>
+        <div class="screen-line screen-line-bottom"></div>
     </div>
 
     <script src="lowLag.js"></script>
