@@ -29,6 +29,8 @@
 
 html {
     background: #000;
+    touch-action: none;
+    overflow: hidden;
 }
 
 body {
@@ -36,6 +38,7 @@ body {
     background-color: var(--hd-black);
     overflow: hidden;
     overscroll-behavior: none;
+    touch-action: none;
     font-family: var(--hd-font);
     color: var(--hd-white);
     -webkit-user-select: none;
@@ -79,15 +82,6 @@ body {
     overflow: hidden;
 }
 
-@media (display-mode: standalone) {
-    #boot-screen,
-    #welcome-screen,
-    #stratagem-screen,
-    #app {
-        width: 100vw;
-        height: 100vh;
-    }
-}
 
 #boot-screen {
     background: #000;
@@ -342,6 +336,7 @@ body {
     width: 22cqh;
     height: 22cqh;
     cursor: pointer;
+    touch-action: manipulation;
     background: linear-gradient(145deg, rgba(25, 55, 85, 0.7), rgba(10, 25, 45, 0.85));
     border: 2px solid rgba(200, 230, 255, 0.25);
     border-radius: 2cqh;
@@ -670,24 +665,22 @@ body {
 }
 
 /* PWA: use vh/vw to fill full screen including safe areas */
-@media (display-mode: standalone) and (orientation: portrait) {
-    html {
+html.pwa .screen-content {
+    max-width: calc(100vh * 16 / 9);
+}
+
+@media (orientation: portrait) {
+    html.pwa {
         width: 100vh;
         height: 100vw;
         transform: translateX(100vw) rotate(90deg);
     }
 
-    html.rotation-alt {
+    html.pwa.rotation-alt {
         transform: translateY(100vh) rotate(-90deg);
     }
 
-    .screen-content {
+    html.pwa .screen-content {
         max-width: calc(100vw * 16 / 9);
-    }
-}
-
-@media (display-mode: standalone) {
-    .screen-content {
-        max-width: calc(100vh * 16 / 9);
     }
 }
